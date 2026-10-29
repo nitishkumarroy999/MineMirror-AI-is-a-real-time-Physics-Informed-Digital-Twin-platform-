@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MineMirror AI | Physics-Informed Digital Twin for Mining</title>
+  <meta name="description" content="MineMirror AI – Real-time Physics-Informed Digital Twin for safe, intelligent and sustainable mining." />
+  <meta name="author" content="Nitish Kumar Roy" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #00d4ff;
+      --primary-dark: #0099cc;
+      --accent: #ff6b35;
+      --bg: #0a0e17;
+      --bg-card: #111827;
+      --bg-elevated: #1a2332;
+      --text: #e5e7eb;
+      --text-muted: #9ca3af;
+      --success: #10b981;
+      --border: rgba(0, 212, 255, 0.15);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ========== NAVBAR ========== */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(10, 14, 23, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: #fff;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #000 !important;
+      padding: 0.5rem 1.2rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    /* ========== HERO ========== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      position: relative;
+      background: 
+        radial-gradient(ellipse at 20% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(255, 107, 53, 0.06) 0%, transparent 40%),
+        var(--bg);
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 900px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid var(--border);
+      color: var(--primary);
+      padding: 0.35rem 1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.5px;
+    }
+
+    .hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(135deg, #fff 30%, var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.3s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 1.5px solid var(--primary);
+    }
+
+    .btn-outline:hover {
+      background: rgba(0, 212, 255, 0.1);
+    }
+
+    /* ========== SECTIONS ========== */
+    section {
+      padding: 5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      font-size: 1.1rem;
+    }
+
+    /* ========== PROBLEM ========== */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .problem-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.8rem;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+
+    .problem-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+
+    .problem-card .icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .problem-card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.6rem;
+      color: var(--accent);
+    }
+
+    .problem-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* ========== SOLUTION ========== */
+    .solution-box {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.08), rgba(255, 107, 53, 0.05));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .solution-box p {
+      font-size: 1.1rem;
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--primary);
+    }
+
+    .feature-card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.6rem;
+      color: var(--primary);
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    /* ========== ARCHITECTURE ========== */
+    .arch-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .arch-layer {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      transition: all 0.3s;
+    }
+
+    .arch-layer:hover {
+      border-color: var(--primary);
+      background: var(--bg-elevated);
+    }
+
+    .arch-num {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #000;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .arch-layer h4 {
+      font-size: 1.05rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .arch-layer p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    /* ========== PINN ========== */
+    .pinn-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+    }
+
+    .pinn-section h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+
+    .pinn-formula {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 1.2rem;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+      margin: 1.5rem 0;
+      font-size: 1.1rem;
+      color: var(--primary);
+      border: 1px solid var(--border);
+    }
+
+    .pinn-benefits {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .pinn-benefit {
+      background: var(--bg-elevated);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    /* ========== ROADMAP ========== */
+    .timeline {
+      position: relative;
+      max-width: 700px;
+      margin: 0 auto;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, var(--primary), var(--accent));
+      border-radius: 3px;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2.5rem;
+      padding-left: 1.5rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2.35rem;
+      top: 0.3rem;
+      width: 14px;
+      height: 14px;
+      background: var(--primary);
+      border-radius: 50%;
+      border: 3px solid var(--bg);
+      box-shadow: 0 0 0 3px var(--primary);
+    }
+
+    .timeline-item h4 {
+      color: var(--primary);
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .timeline-item .phase {
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .timeline-item p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* ========== IMPACT ========== */
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    .impact-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+    }
+
+    .impact-card .number {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.4rem;
+    }
+
+    .impact-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* ========== FOUNDER ========== */
+    .founder-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .founder-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      font-weight: 700;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    .founder-info h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .founder-info .role {
+      color: var(--primary);
+      font-weight: 500;
+      margin-bottom: 0.8rem;
+    }
+
+    .founder-info p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* ========== CONTACT ========== */
+    .contact-box {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 53, 0.08));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .contact-box h3 {
+      font-size: 1.6rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .contact-box p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .email-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--bg-card);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 0.9rem 1.8rem;
+      border-radius: 8px;
+      font-size: 1.15rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .email-link:hover {
+      background: var(--primary);
+      color: #000;
+    }
+
+    /* ========== FOOTER ========== */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    footer .logo {
+      display: block;
+      margin-bottom: 0.8rem;
+      font-size: 1.2rem;
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+      .founder-card {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="#" class="logo">Mine<span>Mirror</span> AI</a>
+    <ul class="nav-links">
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#solution">Solution</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#roadmap">Roadmap</a></li>
+      <li><a href="#founder">Founder</a></li>
+      <li><a href="#contact" class="nav-cta">Enquire</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-content">
+      <div class="badge">Digital Twin Technology in Mining</div>
+      <h1>MineMirror AI</h1>
+      <p>
+        A Physics-Informed Digital Twin that creates a living virtual replica of your mine — 
+        delivering real-time safety, predictive maintenance and sustainable operations.
+      </p>
+      <div class="hero-buttons">
+        <a href="#contact" class="btn btn-primary">Enquire Now</a>
+        <a href="#solution" class="btn btn-outline">Explore the Solution</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- PROBLEM -->
+  <section id="problem">
+    <h2 class="section-title">The Real-World Problem</h2>
+    <p class="section-subtitle">Mining still relies on reactive systems that fail when it matters most</p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="icon">⛏️</div>
+        <h3>Rock Bursts & Collapses</h3>
+        <p>Sudden geotechnical events remain hard to predict. Pure data-driven models fail because labelled failure data is extremely rare.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">⚙️</div>
+        <h3>Unplanned Downtime</h3>
+        <p>Equipment failures cause 15–25% of available hours to be lost. Maintenance is still largely reactive or calendar-based.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">👷</div>
+        <h3>Occupational Health Risks</h3>
+        <p>Dust, heat, noise and vibration accumulate silently until regulatory or medical thresholds are breached.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOLUTION -->
+  <section id="solution">
+    <h2 class="section-title">The Solution: MineMirror AI</h2>
+    <p class="section-subtitle">A living digital twin powered by Physics-Informed Neural Networks</p>
+    
+    <div class="solution-box">
+      <p>
+        MineMirror AI continuously synchronises a high-fidelity virtual replica of the entire mine 
+        (geometry, geology, equipment fleet, ventilation and workforce) with live IoT, SCADA and wearable data. 
+        At its core, <strong>Physics-Informed Neural Networks (PINNs)</strong> embed rock-mechanics and machine-physics 
+        equations into the predictive engine — enabling accurate forecasts even when historical failure data is scarce.
+      </p>
+    </div>
+
+    <div class="features">
+      <div class="feature-card">
+        <h3>Predictive Safety</h3>
+        <p>Early warning of rock bursts and structural instability with 2–12 hour lead time using physics-constrained models.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Equipment Digital Twins</h3>
+        <p>Remaining Useful Life prediction for critical assets. Maintenance only when needed — cutting downtime by 25–40%.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Occupational Health Layer</h3>
+        <p>Real-time exposure tracking (dust, heat, noise, vibration) with dynamic work-schedule optimisation.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Closed-Loop Control</h3>
+        <p>Edge-executed safety interlocks with &lt;200 ms latency. From recommendation to autonomous action under defined envelopes.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Process Optimisation</h3>
+        <p>Continuous “what-if” scenarios for blast design, haulage and plant feed — maximising recovery while minimising energy and water.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Sustainability Dashboard</h3>
+        <p>Live carbon, water and waste footprint with rapid scenario testing for lower-impact mining methods.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE -->
+  <section id="architecture">
+    <h2 class="section-title">Technical Architecture</h2>
+    <p class="section-subtitle">Hybrid edge-cloud design built on commercially available technology</p>
+    
+    <div class="arch-flow">
+      <div class="arch-layer">
+        <div class="arch-num">1</div>
+        <div>
+          <h4>Data Acquisition Layer</h4>
+          <p>SCADA/PLC integration + geotechnical sensors (DAS, micro-seismic) + equipment telemetry + wearables</p>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-num">2</div>
+        <div>
+          <h4>Edge Computing Layer</h4>
+          <p>Ruggedized edge nodes for &lt;200 ms anomaly detection and hard safety interlocks</p>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-num">3</div>
+        <div>
+          <h4>Connectivity & Streaming</h4>
+          <p>Private 5G / fibre + MQTT Sparkplug B + Kafka for high-throughput, reliable data flow</p>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-num">4</div>
+        <div>
+          <h4>Digital Twin Core + PINN Engine</h4>
+          <p>3D geometric & geological twin + physics engines + Physics-Informed Neural Networks</p>
+        </div>
+      </div>
+      <div class="arch-layer">
+        <div class="arch-num">5</div>
+        <div>
+          <h4>Application & Closed-Loop Control</h4>
+          <p>3D collaborative viewer, role-based dashboards, mobile interface and automated actions</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PINN EXPLANATION -->
+  <section>
+    <h2 class="section-title">Physics-Informed Neural Networks</h2>
+    <p class="section-subtitle">The scientific heart of MineMirror AI</p>
+    
+    <div class="pinn-section">
+      <h3>Why PINNs Matter in Mining</h3>
+      <p style="color: var(--text-muted); margin-bottom: 1rem;">
+        Traditional AI models need large amounts of labelled failure data — which almost never exists for rare events like rock bursts. 
+        PINNs solve this by embedding the governing physical equations directly into the neural network’s loss function.
+      </p>
+      
+      <div class="pinn-formula">
+        𝓛 = 𝓛<sub>data</sub> + λ · 𝓛<sub>PDE</sub> + 𝓛<sub>BC/IC</sub>
+      </div>
+      
+      <p style="color: var(--text-muted); text-align: center; margin-bottom: 1.5rem;">
+        The network is forced to satisfy both the sensor measurements <strong>and</strong> the laws of physics.
+      </p>
+
+      <div class="pinn-benefits">
+        <div class="pinn-benefit">Works with sparse data</div>
+        <div class="pinn-benefit">Physically consistent forecasts</div>
+        <div class="pinn-benefit">Generalises to new geology</div>
+        <div class="pinn-benefit">Interpretable & trustworthy</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section id="roadmap">
+    <h2 class="section-title">Implementation Roadmap</h2>
+    <p class="section-subtitle">From concept to multi-mine deployment in 18 months</p>
+    
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="phase">Phase 0 · Month 0–1</div>
+        <h4>Foundation</h4>
+        <p>Requirements finalisation, existing sensor audit, platform selection and hazardous-area certification planning.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="phase">Phase 1 · Month 1–4</div>
+        <h4>MVP Digital Twin</h4>
+        <p>Edge deployment, basic 3D geometric twin, real-time data pipeline and first live dashboard on one production level.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="phase">Phase 2 · Month 4–9</div>
+        <h4>Intelligence & Closed Loop</h4>
+        <p>Full PINN models for rock-burst and RUL, closed-loop safety interlocks, occupational exposure twin and historical validation.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="phase">Phase 3 · Month 9–18</div>
+        <h4>Scale & Commercialise</h4>
+        <p>Multi-mine federation, continuous model improvement pipeline, commercial licensing and customer pilots.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT -->
+  <section>
+    <h2 class="section-title">Expected Impact</h2>
+    <p class="section-subtitle">Quantified value from the first pilot onward</p>
+    
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="number">25–40%</div>
+        <p>Reduction in unplanned downtime</p>
+      </div>
+      <div class="impact-card">
+        <div class="number">2–12h</div>
+        <p>Early warning lead time for rock bursts</p>
+      </div>
+      <div class="impact-card">
+        <div class="number">15–30%</div>
+        <p>Lower maintenance costs</p>
+      </div>
+      <div class="impact-card">
+        <div class="number">20–35%</div>
+        <p>Reduction in cumulative exposure</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOUNDER -->
+  <section id="founder">
+    <h2 class="section-title">Founder</h2>
+    <p class="section-subtitle">Building the future of intelligent mining</p>
+    
+    <div class="founder-card">
+      <div class="founder-avatar">NK</div>
+      <div class="founder-info">
+        <h3>Nitish Kumar Roy</h3>
+        <div class="role">Founder & Innovator</div>
+        <p>
+          Independent innovator focused on applying Physics-Informed AI and Digital Twin technology 
+          to solve real-world challenges in mining safety, productivity and sustainability. 
+          Based in Nagaon, Assam, India.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <h2 class="section-title">Enquire Now</h2>
+    <p class="section-subtitle">Interested in piloting MineMirror AI or collaborating?</p>
+    
+    <div class="contact-box">
+      <h3>Let’s talk</h3>
+      <p>Reach out for technical discussions, pilot opportunities, partnerships or incubation support.</p>
+      <a href="mailto:lup89662@gmail.com" class="email-link">
+        ✉️ lup89662@gmail.com
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="#" class="logo">Mine<span>Mirror</span> AI</a>
+    <p>Physics-Informed Digital Twin for Safe, Intelligent & Sustainable Mining</p>
+    <p style="margin-top: 0.8rem;">© 2026 Nitish Kumar Roy. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
