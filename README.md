@@ -5,7 +5,7 @@
 Official website of MineMirror AI — a digital twin platform focused on predictive safety, equipment reliability and operational excellence in mining.
 
 **Founder:** Nitish Kumar Roy  
-**Location:** Nagaon, Assam, India  
+**Location:** India  
 **Contact:** lup89662@gmail.com
 
 ---
