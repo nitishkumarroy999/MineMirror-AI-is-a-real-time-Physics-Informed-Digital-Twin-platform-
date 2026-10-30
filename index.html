@@ -27,6 +27,9 @@
       --radius: 16px;
       --radius-lg: 24px;
       --nav-height: 72px;
+      --success: #22c55e;
+      --warning: #eab308;
+      --danger: #ef4444;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -40,7 +43,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ========== SCROLLBAR ========== */
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb {
@@ -129,15 +131,10 @@
       border-radius: 2px;
       transition: all 0.3s ease;
     }
-    .hamburger.active span:nth-child(1) {
-      transform: translateY(7px) rotate(45deg);
-    }
+    .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     .hamburger.active span:nth-child(2) { opacity: 0; }
-    .hamburger.active span:nth-child(3) {
-      transform: translateY(-7px) rotate(-45deg);
-    }
+    .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-    /* Mobile menu */
     .mobile-menu {
       position: fixed; top: 0; right: -100%;
       width: min(320px, 85vw); height: 100vh;
@@ -357,7 +354,6 @@
       font-size: 1.1rem; max-width: 580px; margin: 0 auto;
     }
 
-    /* Reveal animation */
     .reveal {
       opacity: 0;
       transform: translateY(32px);
@@ -474,6 +470,292 @@
       transition: transform 0.6s ease;
     }
     .feature-image:hover img { transform: scale(1.05); }
+
+    /* ========== LIVE DEMO SECTION ========== */
+    .demo-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2.5rem 6.5rem;
+    }
+    .demo-container {
+      background: linear-gradient(160deg, rgba(15, 23, 42, 0.9), rgba(2, 6, 23, 0.95));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 30px 60px -20px rgba(0,0,0,0.5), 0 0 80px -30px rgba(34, 211, 238, 0.12);
+    }
+    .demo-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 1.5rem;
+      background: rgba(15, 23, 42, 0.8);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .demo-title {
+      display: flex; align-items: center; gap: 0.7rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600; font-size: 1.05rem;
+    }
+    .demo-title .live-indicator {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.75rem; font-weight: 500;
+      color: var(--success);
+      background: rgba(34, 197, 94, 0.12);
+      padding: 0.25rem 0.7rem;
+      border-radius: 100px;
+    }
+    .demo-title .live-indicator span {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--success);
+      animation: live-pulse 2s infinite;
+    }
+    .demo-zones {
+      display: flex; gap: 0.4rem;
+    }
+    .zone-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      padding: 0.4rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.8rem; font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .zone-btn:hover, .zone-btn.active {
+      background: rgba(34, 211, 238, 0.1);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .demo-body {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr 1fr;
+      gap: 0;
+      min-height: 480px;
+    }
+    .demo-panel {
+      padding: 1.4rem;
+      border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 1.2rem;
+    }
+    .demo-panel:last-child { border-right: none; }
+    .panel-label {
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    /* Gauges */
+    .gauge-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .gauge {
+      text-align: center;
+    }
+    .gauge-ring {
+      position: relative;
+      width: 90px; height: 90px;
+      margin: 0 auto 0.5rem;
+    }
+    .gauge-ring svg {
+      width: 100%; height: 100%;
+      transform: rotate(-90deg);
+    }
+    .gauge-ring circle {
+      fill: none;
+      stroke-width: 7;
+    }
+    .gauge-bg { stroke: rgba(255,255,255,0.06); }
+    .gauge-fill {
+      stroke: var(--primary);
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s ease, stroke 0.4s;
+    }
+    .gauge-value {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.15rem; font-weight: 700;
+    }
+    .gauge-label {
+      font-size: 0.78rem; color: var(--text-muted);
+    }
+
+    /* Metrics list */
+    .metric-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 0.88rem;
+    }
+    .metric-row:last-child { border-bottom: none; }
+    .metric-name { color: var(--text-muted); }
+    .metric-val {
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .metric-val.up { color: var(--success); }
+    .metric-val.down { color: var(--danger); }
+    .metric-val.warn { color: var(--warning); }
+
+    /* Equipment cards */
+    .equip-list {
+      display: flex; flex-direction: column; gap: 0.7rem;
+      flex: 1;
+    }
+    .equip-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      display: flex; align-items: center; gap: 0.85rem;
+      transition: all 0.25s;
+      cursor: pointer;
+    }
+    .equip-card:hover {
+      background: rgba(34, 211, 238, 0.06);
+      border-color: rgba(34, 211, 238, 0.2);
+    }
+    .equip-status {
+      width: 10px; height: 10px; border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .equip-status.healthy { background: var(--success); box-shadow: 0 0 8px rgba(34,197,94,0.4); }
+    .equip-status.warning { background: var(--warning); box-shadow: 0 0 8px rgba(234,179,8,0.4); }
+    .equip-status.critical { background: var(--danger); box-shadow: 0 0 8px rgba(239,68,68,0.4); }
+    .equip-info { flex: 1; min-width: 0; }
+    .equip-name {
+      font-size: 0.88rem; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .equip-meta {
+      font-size: 0.75rem; color: var(--text-muted);
+    }
+    .equip-health {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem; font-weight: 700;
+    }
+
+    /* Risk map */
+    .risk-map {
+      flex: 1;
+      background: rgba(0,0,0,0.25);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+      position: relative;
+      overflow: hidden;
+      min-height: 200px;
+    }
+    .risk-map-grid {
+      position: absolute; inset: 0;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+      gap: 3px;
+      padding: 8px;
+    }
+    .risk-cell {
+      border-radius: 4px;
+      background: rgba(34, 211, 238, 0.08);
+      transition: background 0.6s ease;
+      cursor: pointer;
+    }
+    .risk-cell.low { background: rgba(34, 197, 94, 0.25); }
+    .risk-cell.med { background: rgba(234, 179, 8, 0.35); }
+    .risk-cell.high { background: rgba(239, 68, 68, 0.4); }
+    .risk-cell:hover { filter: brightness(1.3); }
+    .risk-legend {
+      display: flex; gap: 1rem; justify-content: center;
+      margin-top: 0.6rem; font-size: 0.72rem; color: var(--text-muted);
+    }
+    .risk-legend span {
+      display: flex; align-items: center; gap: 0.35rem;
+    }
+    .risk-legend i {
+      width: 10px; height: 10px; border-radius: 3px;
+    }
+
+    /* Alert feed */
+    .alert-feed {
+      display: flex; flex-direction: column; gap: 0.6rem;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    .alert-item {
+      display: flex; gap: 0.7rem;
+      padding: 0.7rem 0.85rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 10px;
+      border-left: 3px solid;
+      font-size: 0.82rem;
+      animation: alertIn 0.4s ease;
+    }
+    @keyframes alertIn {
+      from { opacity: 0; transform: translateX(-12px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .alert-item.info { border-color: var(--primary); }
+    .alert-item.warning { border-color: var(--warning); }
+    .alert-item.critical { border-color: var(--danger); }
+    .alert-time {
+      font-size: 0.7rem; color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .alert-text { color: var(--text); }
+
+    /* Scenario controls */
+    .demo-footer {
+      padding: 1.1rem 1.5rem;
+      background: rgba(15, 23, 42, 0.7);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .scenario-label {
+      font-size: 0.85rem; color: var(--text-muted);
+      font-weight: 500;
+    }
+    .scenario-btns {
+      display: flex; gap: 0.5rem; flex-wrap: wrap;
+    }
+    .scenario-btn {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text);
+      padding: 0.55rem 1.1rem;
+      border-radius: 10px;
+      font-size: 0.85rem; font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .scenario-btn:hover {
+      background: rgba(34, 211, 238, 0.1);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .scenario-btn.active {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dim));
+      color: #000;
+      border-color: transparent;
+      box-shadow: 0 4px 16px rgba(34, 211, 238, 0.3);
+    }
+    .demo-note {
+      font-size: 0.78rem; color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    /* Chart */
+    .mini-chart {
+      height: 90px;
+      position: relative;
+    }
+    .mini-chart canvas {
+      width: 100%; height: 100%;
+    }
 
     /* ========== STATS ========== */
     .stats {
@@ -693,6 +975,14 @@
     }
 
     /* ========== RESPONSIVE ========== */
+    @media (max-width: 1100px) {
+      .demo-body { grid-template-columns: 1fr 1fr; }
+      .demo-panel:nth-child(3) {
+        grid-column: 1 / -1;
+        border-right: none;
+        border-top: 1px solid var(--border);
+      }
+    }
     @media (max-width: 1024px) {
       .hero-grid, .feature-row, .grid-3, .steps, .stats, .tech-grid {
         grid-template-columns: 1fr;
@@ -706,7 +996,7 @@
       nav { padding: 0 1.4rem; }
       .nav-links { display: none; }
       .hamburger { display: flex; }
-      section { padding: 4.5rem 1.4rem; }
+      section, .demo-section { padding: 4.5rem 1.4rem; }
       .hero { padding: 7rem 1.4rem 4rem; }
       .founder-card {
         flex-direction: column;
@@ -715,6 +1005,10 @@
       }
       .tech-grid { grid-template-columns: 1fr; }
       .stats { grid-template-columns: 1fr 1fr; }
+      .demo-body { grid-template-columns: 1fr; }
+      .demo-panel { border-right: none; border-bottom: 1px solid var(--border); }
+      .demo-panel:last-child { border-bottom: none; }
+      .demo-header { flex-direction: column; align-items: flex-start; }
     }
     @media (max-width: 480px) {
       .stats { grid-template-columns: 1fr; }
@@ -734,6 +1028,7 @@
       <li><a href="#overview">Overview</a></li>
       <li><a href="#challenges">Challenges</a></li>
       <li><a href="#capabilities">Capabilities</a></li>
+      <li><a href="#demo">Live Demo</a></li>
       <li><a href="#approach">Approach</a></li>
       <li><a href="#tech">Technology</a></li>
       <li><a href="#founder">Founder</a></li>
@@ -744,12 +1039,12 @@
     </button>
   </nav>
 
-  <!-- Mobile Menu -->
   <div class="mobile-overlay" id="mobileOverlay"></div>
   <div class="mobile-menu" id="mobileMenu">
     <a href="#overview">Overview</a>
     <a href="#challenges">Challenges</a>
     <a href="#capabilities">Capabilities</a>
+    <a href="#demo">Live Demo</a>
     <a href="#approach">Approach</a>
     <a href="#tech">Technology</a>
     <a href="#founder">Founder</a>
@@ -777,7 +1072,7 @@
             Request a Discussion
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
-          <a href="#overview" class="btn btn-ghost">Explore Platform</a>
+          <a href="#demo" class="btn btn-ghost">Try Live Demo</a>
         </div>
       </div>
       <div class="hero-visual">
@@ -915,6 +1210,216 @@
       </div>
     </div>
   </section>
+
+  <!-- ========== LIVE DEMO ========== -->
+  <section id="demo" style="padding-bottom: 2rem;">
+    <div class="section-header reveal">
+      <div class="section-label">Interactive Experience</div>
+      <h2 class="section-title">Live Digital Twin Demo</h2>
+      <p class="section-desc">
+        Explore a simulated real-time view of MineMirror AI. Switch zones, run scenarios,
+        and watch predictive intelligence respond.
+      </p>
+    </div>
+  </section>
+
+  <div class="demo-section reveal">
+    <div class="demo-container">
+      <!-- Header -->
+      <div class="demo-header">
+        <div class="demo-title">
+          MineMirror Control Room
+          <div class="live-indicator"><span></span> LIVE</div>
+        </div>
+        <div class="demo-zones">
+          <button class="zone-btn active" data-zone="north">North Face</button>
+          <button class="zone-btn" data-zone="central">Central Pit</button>
+          <button class="zone-btn" data-zone="south">South Decline</button>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="demo-body">
+        <!-- Left: Metrics + Gauges -->
+        <div class="demo-panel">
+          <div>
+            <div class="panel-label">Key Metrics</div>
+            <div class="gauge-grid">
+              <div class="gauge">
+                <div class="gauge-ring">
+                  <svg viewBox="0 0 36 36">
+                    <circle class="gauge-bg" cx="18" cy="18" r="15.5"/>
+                    <circle class="gauge-fill" id="gaugeSafety" cx="18" cy="18" r="15.5"
+                      stroke-dasharray="97.4" stroke-dashoffset="20"/>
+                  </svg>
+                  <div class="gauge-value" id="valSafety">79%</div>
+                </div>
+                <div class="gauge-label">Safety Index</div>
+              </div>
+              <div class="gauge">
+                <div class="gauge-ring">
+                  <svg viewBox="0 0 36 36">
+                    <circle class="gauge-bg" cx="18" cy="18" r="15.5"/>
+                    <circle class="gauge-fill" id="gaugeUptime" cx="18" cy="18" r="15.5"
+                      stroke-dasharray="97.4" stroke-dashoffset="12" style="stroke:#22c55e"/>
+                  </svg>
+                  <div class="gauge-value" id="valUptime">88%</div>
+                </div>
+                <div class="gauge-label">Fleet Uptime</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="panel-label">Live Readings</div>
+            <div class="metric-row">
+              <span class="metric-name">Seismic Events</span>
+              <span class="metric-val" id="mSeismic">3 / hr</span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-name">Avg. Vibration</span>
+              <span class="metric-val" id="mVib">2.4 mm/s</span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-name">Dust Level</span>
+              <span class="metric-val warn" id="mDust">1.8 mg/m³</span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-name">Air Velocity</span>
+              <span class="metric-val up" id="mAir">1.2 m/s</span>
+            </div>
+            <div class="metric-row">
+              <span class="metric-name">Ground Temp</span>
+              <span class="metric-val" id="mTemp">28.4 °C</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="panel-label">Trend (Last 60 min)</div>
+            <div class="mini-chart">
+              <canvas id="trendChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center: Equipment + Risk Map -->
+        <div class="demo-panel">
+          <div>
+            <div class="panel-label">Critical Assets</div>
+            <div class="equip-list" id="equipList">
+              <div class="equip-card">
+                <div class="equip-status healthy"></div>
+                <div class="equip-info">
+                  <div class="equip-name">Dragline DL-07</div>
+                  <div class="equip-meta">RUL 1,240 hrs · Normal</div>
+                </div>
+                <div class="equip-health" style="color:var(--success)">94%</div>
+              </div>
+              <div class="equip-card">
+                <div class="equip-status warning"></div>
+                <div class="equip-info">
+                  <div class="equip-name">Haul Truck HT-22</div>
+                  <div class="equip-meta">RUL 310 hrs · Elevated vib</div>
+                </div>
+                <div class="equip-health" style="color:var(--warning)">71%</div>
+              </div>
+              <div class="equip-card">
+                <div class="equip-status healthy"></div>
+                <div class="equip-info">
+                  <div class="equip-name">Shovel SH-04</div>
+                  <div class="equip-meta">RUL 890 hrs · Normal</div>
+                </div>
+                <div class="equip-health" style="color:var(--success)">89%</div>
+              </div>
+              <div class="equip-card">
+                <div class="equip-status critical"></div>
+                <div class="equip-info">
+                  <div class="equip-name">Conveyor CV-12</div>
+                  <div class="equip-meta">RUL 48 hrs · Thermal spike</div>
+                </div>
+                <div class="equip-health" style="color:var(--danger)">42%</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="panel-label">Geotechnical Risk Map</div>
+            <div class="risk-map">
+              <div class="risk-map-grid" id="riskGrid"></div>
+            </div>
+            <div class="risk-legend">
+              <span><i style="background:rgba(34,197,94,0.5)"></i> Low</span>
+              <span><i style="background:rgba(234,179,8,0.6)"></i> Medium</span>
+              <span><i style="background:rgba(239,68,68,0.6)"></i> High</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Alerts -->
+        <div class="demo-panel">
+          <div>
+            <div class="panel-label">Alert Feed</div>
+            <div class="alert-feed" id="alertFeed">
+              <div class="alert-item warning">
+                <div>
+                  <div class="alert-text">Elevated vibration detected on HT-22</div>
+                  <div class="alert-time">2 min ago</div>
+                </div>
+              </div>
+              <div class="alert-item critical">
+                <div>
+                  <div class="alert-text">Thermal anomaly · Conveyor CV-12</div>
+                  <div class="alert-time">7 min ago</div>
+                </div>
+              </div>
+              <div class="alert-item info">
+                <div>
+                  <div class="alert-text">Seismic cluster resolved · North Face</div>
+                  <div class="alert-time">18 min ago</div>
+                </div>
+              </div>
+              <div class="alert-item info">
+                <div>
+                  <div class="alert-text">Ventilation set-point adjusted</div>
+                  <div class="alert-time">31 min ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:auto">
+            <div class="panel-label">Prediction Window</div>
+            <div style="background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.15);border-radius:12px;padding:1rem;">
+              <div style="font-size:0.9rem;font-weight:600;margin-bottom:0.4rem;">Next 6–12 hours</div>
+              <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.5;">
+                Moderate risk of increased micro-seismic activity in North Face sector B. Recommend reduced blast intensity and additional monitoring.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer / Scenarios -->
+      <div class="demo-footer">
+        <div class="scenario-label">Run Scenario Simulation</div>
+        <div class="scenario-btns">
+          <button class="scenario-btn" data-scenario="blast">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Blast Design
+          </button>
+          <button class="scenario-btn" data-scenario="vent">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+            Ventilation
+          </button>
+          <button class="scenario-btn" data-scenario="load">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Haul Load
+          </button>
+        </div>
+        <div class="demo-note">Simulated environment · Not connected to live mine data</div>
+      </div>
+    </div>
+  </div>
 
   <!-- APPROACH -->
   <section id="approach">
@@ -1130,7 +1635,6 @@
         }
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
     revealEls.forEach(el => revealObserver.observe(el));
 
     // ========== ANIMATED COUNTERS ==========
@@ -1144,7 +1648,6 @@
           const suffix = el.dataset.suffix || '';
           const duration = 1800;
           const start = performance.now();
-
           function update(now) {
             const progress = Math.min((now - start) / duration, 1);
             const eased = 1 - Math.pow(1 - progress, 3);
@@ -1158,7 +1661,6 @@
         }
       });
     }, { threshold: 0.5 });
-
     counters.forEach(c => counterObserver.observe(c));
 
     // ========== PARTICLE CANVAS ==========
@@ -1172,7 +1674,6 @@
       width = canvas.width = canvas.offsetWidth;
       height = canvas.height = canvas.offsetHeight;
     }
-
     function createParticles() {
       particles = [];
       const count = Math.min(55, Math.floor(width * height / 18000));
@@ -1187,25 +1688,19 @@
         });
       }
     }
-
     function draw() {
       ctx.clearRect(0, 0, width, height);
       particles.forEach((p, i) => {
-        p.x += p.vx;
-        p.y += p.vy;
+        p.x += p.vx; p.y += p.vy;
         if (p.x < 0 || p.x > width) p.vx *= -1;
         if (p.y < 0 || p.y > height) p.vy *= -1;
-
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(34, 211, 238, ${p.alpha})`;
         ctx.fill();
-
-        // subtle connections
         for (let j = i + 1; j < particles.length; j++) {
           const q = particles[j];
-          const dx = p.x - q.x;
-          const dy = p.y - q.y;
+          const dx = p.x - q.x, dy = p.y - q.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
           if (dist < 110) {
             ctx.beginPath();
@@ -1219,22 +1714,183 @@
       });
       animationId = requestAnimationFrame(draw);
     }
-
     function initParticles() {
-      resize();
-      createParticles();
+      resize(); createParticles();
       if (animationId) cancelAnimationFrame(animationId);
       draw();
     }
-
-    window.addEventListener('resize', () => {
-      resize();
-      createParticles();
-    });
-
-    // Only run particles if hero is roughly in view and prefers-reduced-motion is not set
+    window.addEventListener('resize', () => { resize(); createParticles(); });
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       initParticles();
+    }
+
+    // ========== LIVE DEMO LOGIC ==========
+    const circumference = 2 * Math.PI * 15.5; // ~97.4
+
+    function setGauge(id, value, color) {
+      const circle = document.getElementById(id);
+      const valEl = document.getElementById('val' + id.replace('gauge', ''));
+      if (!circle) return;
+      const offset = circumference - (value / 100) * circumference;
+      circle.style.strokeDashoffset = offset;
+      if (color) circle.style.stroke = color;
+      if (valEl) valEl.textContent = Math.round(value) + '%';
+    }
+
+    // Initialize gauges
+    setGauge('gaugeSafety', 79);
+    setGauge('gaugeUptime', 88, '#22c55e');
+
+    // Risk map
+    const riskGrid = document.getElementById('riskGrid');
+    function generateRiskMap(intensity = 0.3) {
+      riskGrid.innerHTML = '';
+      for (let i = 0; i < 30; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'risk-cell';
+        const r = Math.random();
+        if (r < intensity * 0.25) cell.classList.add('high');
+        else if (r < intensity * 0.55) cell.classList.add('med');
+        else if (r < intensity * 0.9) cell.classList.add('low');
+        riskGrid.appendChild(cell);
+      }
+    }
+    generateRiskMap(0.35);
+
+    // Live metric updates
+    const metrics = {
+      seismic: { el: document.getElementById('mSeismic'), base: 3, range: ' / hr' },
+      vib: { el: document.getElementById('mVib'), base: 2.4, unit: ' mm/s', decimals: 1 },
+      dust: { el: document.getElementById('mDust'), base: 1.8, unit: ' mg/m³', decimals: 1 },
+      air: { el: document.getElementById('mAir'), base: 1.2, unit: ' m/s', decimals: 1 },
+      temp: { el: document.getElementById('mTemp'), base: 28.4, unit: ' °C', decimals: 1 }
+    };
+
+    function updateMetrics() {
+      Object.values(metrics).forEach(m => {
+        if (!m.el) return;
+        const delta = (Math.random() - 0.5) * 0.3;
+        const val = Math.max(0, m.base + delta);
+        m.base = val;
+        m.el.textContent = (m.decimals ? val.toFixed(m.decimals) : Math.round(val)) + m.unit;
+      });
+      // slight gauge drift
+      const safety = 75 + Math.random() * 12;
+      const uptime = 84 + Math.random() * 10;
+      setGauge('gaugeSafety', safety);
+      setGauge('gaugeUptime', uptime, uptime > 85 ? '#22c55e' : '#eab308');
+    }
+    setInterval(updateMetrics, 3200);
+
+    // Zone switching
+    document.querySelectorAll('.zone-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const zone = btn.dataset.zone;
+        const intensity = zone === 'north' ? 0.45 : zone === 'central' ? 0.3 : 0.55;
+        generateRiskMap(intensity);
+        // push a new alert
+        addAlert(
+          zone === 'south' ? 'warning' : 'info',
+          `Switched to ${btn.textContent} zone · risk model refreshed`
+        );
+      });
+    });
+
+    // Scenario buttons
+    document.querySelectorAll('.scenario-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const sc = btn.dataset.scenario;
+        if (sc === 'blast') {
+          generateRiskMap(0.7);
+          setGauge('gaugeSafety', 61);
+          addAlert('critical', 'Blast scenario: elevated seismic risk predicted in sector B');
+          addAlert('warning', 'Recommend reducing charge density by 15–20%');
+        } else if (sc === 'vent') {
+          generateRiskMap(0.25);
+          setGauge('gaugeSafety', 86);
+          metrics.dust.base = 1.1;
+          metrics.air.base = 1.6;
+          updateMetrics();
+          addAlert('info', 'Ventilation scenario: improved airflow · dust levels declining');
+        } else if (sc === 'load') {
+          setGauge('gaugeUptime', 76, '#eab308');
+          addAlert('warning', 'Increased haul load: HT-22 health projected to drop 8% in 4 hrs');
+        }
+        setTimeout(() => btn.classList.remove('active'), 4000);
+      });
+    });
+
+    // Alert feed
+    function addAlert(type, text) {
+      const feed = document.getElementById('alertFeed');
+      const item = document.createElement('div');
+      item.className = `alert-item ${type}`;
+      item.innerHTML = `<div><div class="alert-text">${text}</div><div class="alert-time">Just now</div></div>`;
+      feed.insertBefore(item, feed.firstChild);
+      if (feed.children.length > 6) feed.removeChild(feed.lastChild);
+    }
+
+    // Mini trend chart
+    const trendCanvas = document.getElementById('trendChart');
+    if (trendCanvas) {
+      const tctx = trendCanvas.getContext('2d');
+      let trendData = Array.from({ length: 30 }, () => 40 + Math.random() * 40);
+
+      function drawTrend() {
+        const w = trendCanvas.width = trendCanvas.offsetWidth * 2;
+        const h = trendCanvas.height = trendCanvas.offsetHeight * 2;
+        tctx.scale(2, 2);
+        const cw = w / 2, ch = h / 2;
+        tctx.clearRect(0, 0, cw, ch);
+
+        // grid line
+        tctx.strokeStyle = 'rgba(255,255,255,0.04)';
+        tctx.beginPath();
+        tctx.moveTo(0, ch / 2);
+        tctx.lineTo(cw, ch / 2);
+        tctx.stroke();
+
+        // area
+        tctx.beginPath();
+        tctx.moveTo(0, ch);
+        trendData.forEach((v, i) => {
+          const x = (i / (trendData.length - 1)) * cw;
+          const y = ch - (v / 100) * ch;
+          tctx.lineTo(x, y);
+        });
+        tctx.lineTo(cw, ch);
+        tctx.closePath();
+        const grad = tctx.createLinearGradient(0, 0, 0, ch);
+        grad.addColorStop(0, 'rgba(34,211,238,0.25)');
+        grad.addColorStop(1, 'rgba(34,211,238,0)');
+        tctx.fillStyle = grad;
+        tctx.fill();
+
+        // line
+        tctx.beginPath();
+        trendData.forEach((v, i) => {
+          const x = (i / (trendData.length - 1)) * cw;
+          const y = ch - (v / 100) * ch;
+          if (i === 0) tctx.moveTo(x, y);
+          else tctx.lineTo(x, y);
+        });
+        tctx.strokeStyle = '#22d3ee';
+        tctx.lineWidth = 1.8;
+        tctx.stroke();
+      }
+
+      function updateTrend() {
+        trendData.shift();
+        trendData.push(35 + Math.random() * 50);
+        drawTrend();
+      }
+      drawTrend();
+      setInterval(updateTrend, 2500);
+      window.addEventListener('resize', drawTrend);
     }
   </script>
 </body>
