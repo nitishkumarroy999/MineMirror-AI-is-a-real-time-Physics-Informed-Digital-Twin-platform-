@@ -4,18 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MineMirror AI | Physics-Informed Digital Twin for Mining</title>
-  <meta name="description" content="MineMirror AI – Advanced Digital Twin platform for predictive safety, equipment reliability and operational excellence in mining." />
+  <meta name="description" content="MineMirror AI – Physics-informed Digital Twin platform for predictive safety, equipment reliability and operational excellence in mining. Collaborate with us." />
   <meta name="author" content="Nitish Kumar Roy" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     :root {
       --primary: #22d3ee;
       --primary-dim: #0891b2;
       --primary-glow: rgba(34, 211, 238, 0.35);
       --accent: #f97316;
-      --accent-soft: rgba(249, 115, 22, 0.15);
       --bg: #020617;
       --bg-card: rgba(15, 23, 42, 0.65);
       --bg-elevated: #0f172a;
@@ -23,7 +23,6 @@
       --text-muted: #94a3b8;
       --border: rgba(34, 211, 238, 0.12);
       --border-hover: rgba(34, 211, 238, 0.35);
-      --glow: rgba(34, 211, 238, 0.15);
       --radius: 16px;
       --radius-lg: 24px;
       --nav-height: 72px;
@@ -31,41 +30,33 @@
       --warning: #eab308;
       --danger: #ef4444;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.65;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
-
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb {
-      background: rgba(34, 211, 238, 0.25);
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(34, 211, 238, 0.45); }
+    ::-webkit-scrollbar-thumb { background: rgba(34,211,238,0.25); border-radius: 4px; }
 
-    /* ========== NAVBAR ========== */
+    /* NAV */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
       height: var(--nav-height);
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 2.5rem;
-      background: rgba(2, 6, 23, 0.55);
+      background: rgba(2,6,23,0.55);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid transparent;
-      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.35s;
     }
     nav.scrolled {
-      background: rgba(2, 6, 23, 0.92);
-      backdrop-filter: blur(20px);
+      background: rgba(2,6,23,0.92);
       border-bottom-color: var(--border);
       box-shadow: 0 4px 30px rgba(0,0,0,0.25);
     }
@@ -73,7 +64,6 @@
       font-family: 'Space Grotesk', sans-serif;
       font-size: 1.35rem; font-weight: 700;
       color: var(--primary); text-decoration: none;
-      letter-spacing: -0.5px;
       display: flex; align-items: center; gap: 0.35rem;
     }
     .logo span { color: #fff; }
@@ -84,135 +74,83 @@
       animation: pulse-dot 2.5s ease-in-out infinite;
     }
     @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
+      0%,100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.5; transform: scale(0.85); }
     }
-    .nav-links {
-      display: flex; gap: 2rem; list-style: none; align-items: center;
-    }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
     .nav-links a {
       color: var(--text-muted); text-decoration: none;
-      font-size: 0.9rem; font-weight: 500;
-      transition: color 0.25s;
+      font-size: 0.88rem; font-weight: 500; transition: color 0.25s;
       position: relative;
     }
     .nav-links a:not(.nav-cta)::after {
-      content: '';
-      position: absolute; bottom: -4px; left: 0;
-      width: 0; height: 2px;
-      background: var(--primary);
-      transition: width 0.3s ease;
+      content: ''; position: absolute; bottom: -4px; left: 0;
+      width: 0; height: 2px; background: var(--primary); transition: width 0.3s;
     }
     .nav-links a:not(.nav-cta):hover { color: var(--primary); }
     .nav-links a:not(.nav-cta):hover::after { width: 100%; }
     .nav-cta {
       background: linear-gradient(135deg, var(--primary), var(--primary-dim));
-      color: #000 !important;
-      padding: 0.55rem 1.35rem;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      box-shadow: 0 4px 20px rgba(34, 211, 238, 0.2);
+      color: #000 !important; padding: 0.5rem 1.2rem;
+      border-radius: 10px; font-weight: 600; font-size: 0.88rem;
+      box-shadow: 0 4px 20px rgba(34,211,238,0.2);
       transition: all 0.3s !important;
     }
-    .nav-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(34, 211, 238, 0.35);
-    }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(34,211,238,0.35); }
     .hamburger {
-      display: none;
-      flex-direction: column; gap: 5px;
-      cursor: pointer; background: none; border: none;
-      padding: 6px;
-      z-index: 1001;
+      display: none; flex-direction: column; gap: 5px;
+      cursor: pointer; background: none; border: none; padding: 6px; z-index: 1001;
     }
-    .hamburger span {
-      width: 22px; height: 2px; background: var(--text);
-      border-radius: 2px;
-      transition: all 0.3s ease;
-    }
+    .hamburger span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s; }
     .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
     .hamburger.active span:nth-child(2) { opacity: 0; }
     .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
     .mobile-menu {
-      position: fixed; top: 0; right: -100%;
-      width: min(320px, 85vw); height: 100vh;
-      background: rgba(2, 6, 23, 0.97);
-      backdrop-filter: blur(24px);
-      border-left: 1px solid var(--border);
-      padding: 6rem 2rem 2rem;
-      z-index: 999;
-      transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex; flex-direction: column; gap: 0.5rem;
+      position: fixed; top: 0; right: -100%; width: min(320px,85vw); height: 100vh;
+      background: rgba(2,6,23,0.97); backdrop-filter: blur(24px);
+      border-left: 1px solid var(--border); padding: 6rem 2rem 2rem;
+      z-index: 999; transition: right 0.4s; display: flex; flex-direction: column; gap: 0.4rem;
     }
     .mobile-menu.open { right: 0; }
     .mobile-menu a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 1.1rem; font-weight: 500;
-      padding: 0.9rem 1rem;
-      border-radius: 10px;
-      transition: all 0.25s;
+      color: var(--text-muted); text-decoration: none; font-size: 1.05rem;
+      padding: 0.85rem 1rem; border-radius: 10px; transition: all 0.25s;
     }
-    .mobile-menu a:hover {
-      color: var(--primary);
-      background: rgba(34, 211, 238, 0.08);
-    }
+    .mobile-menu a:hover { color: var(--primary); background: rgba(34,211,238,0.08); }
     .mobile-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.5);
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.35s;
-      z-index: 998;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      opacity: 0; pointer-events: none; transition: opacity 0.35s; z-index: 998;
     }
-    .mobile-overlay.visible {
-      opacity: 1; pointer-events: auto;
-    }
+    .mobile-overlay.visible { opacity: 1; pointer-events: auto; }
 
-    /* ========== HERO ========== */
+    /* HERO */
     .hero {
-      min-height: 100vh;
-      display: flex; align-items: center;
-      padding: 8rem 2.5rem 5rem;
-      position: relative;
-      overflow: hidden;
+      min-height: 100vh; display: flex; align-items: center;
+      padding: 8rem 2.5rem 5rem; position: relative; overflow: hidden;
     }
     .hero-bg {
       position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse 90% 60% at 50% -25%, rgba(34, 211, 238, 0.14), transparent),
-        radial-gradient(ellipse 50% 40% at 95% 10%, rgba(249, 115, 22, 0.07), transparent),
-        radial-gradient(ellipse 40% 30% at 5% 80%, rgba(34, 211, 238, 0.05), transparent);
+        radial-gradient(ellipse 90% 60% at 50% -25%, rgba(34,211,238,0.14), transparent),
+        radial-gradient(ellipse 50% 40% at 95% 10%, rgba(249,115,22,0.07), transparent);
       pointer-events: none;
     }
-    #particles {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      opacity: 0.5;
-    }
+    #particles { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.45; }
     .hero-grid {
       max-width: 1200px; margin: 0 auto;
       display: grid; grid-template-columns: 1.15fr 0.85fr;
-      gap: 4rem; align-items: center;
-      position: relative; z-index: 1;
+      gap: 4rem; align-items: center; position: relative; z-index: 1;
     }
     .badge {
       display: inline-flex; align-items: center; gap: 0.55rem;
-      background: rgba(34, 211, 238, 0.08);
-      border: 1px solid var(--border);
-      color: var(--primary);
-      padding: 0.4rem 1.05rem; border-radius: 100px;
-      font-size: 0.8rem; font-weight: 500;
-      margin-bottom: 1.6rem; letter-spacing: 0.3px;
+      background: rgba(34,211,238,0.08); border: 1px solid var(--border);
+      color: var(--primary); padding: 0.4rem 1.05rem; border-radius: 100px;
+      font-size: 0.8rem; font-weight: 500; margin-bottom: 1.6rem;
       animation: fadeUp 0.8s ease both;
     }
     .badge-pulse {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--primary);
-      box-shadow: 0 0 0 0 var(--primary-glow);
-      animation: badge-pulse 2s infinite;
+      width: 7px; height: 7px; border-radius: 50%; background: var(--primary);
+      box-shadow: 0 0 0 0 var(--primary-glow); animation: badge-pulse 2s infinite;
     }
     @keyframes badge-pulse {
       0% { box-shadow: 0 0 0 0 var(--primary-glow); }
@@ -221,834 +159,390 @@
     }
     .hero h1 {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(2.5rem, 5vw, 3.7rem);
-      font-weight: 700; line-height: 1.1;
-      margin-bottom: 1.4rem;
-      letter-spacing: -1.2px;
+      font-size: clamp(2.4rem, 5vw, 3.6rem); font-weight: 700; line-height: 1.1;
+      margin-bottom: 1.4rem; letter-spacing: -1.2px;
       animation: fadeUp 0.8s 0.1s ease both;
     }
     .hero h1 span {
-      background: linear-gradient(135deg, var(--primary) 0%, #67e8f9 50%, #a5f3fc 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      background: linear-gradient(135deg, var(--primary), #67e8f9, #a5f3fc);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
     .hero-lead {
-      font-size: 1.15rem; color: var(--text-muted);
-      max-width: 520px; margin-bottom: 2.4rem;
+      font-size: 1.12rem; color: var(--text-muted); max-width: 520px; margin-bottom: 2.2rem;
       animation: fadeUp 0.8s 0.2s ease both;
     }
-    .hero-buttons {
-      display: flex; gap: 1rem; flex-wrap: wrap;
-      animation: fadeUp 0.8s 0.3s ease both;
-    }
+    .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; animation: fadeUp 0.8s 0.3s ease both; }
     .btn {
       display: inline-flex; align-items: center; gap: 0.55rem;
-      padding: 0.95rem 1.8rem; border-radius: 12px;
-      font-weight: 600; font-size: 0.95rem;
-      text-decoration: none; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      border: none; cursor: pointer;
-      position: relative; overflow: hidden;
+      padding: 0.9rem 1.7rem; border-radius: 12px; font-weight: 600; font-size: 0.95rem;
+      text-decoration: none; transition: all 0.3s; border: none; cursor: pointer;
     }
     .btn-primary {
       background: linear-gradient(135deg, var(--primary), var(--primary-dim));
-      color: #000;
-      box-shadow: 0 4px 24px rgba(34, 211, 238, 0.25);
+      color: #000; box-shadow: 0 4px 24px rgba(34,211,238,0.25);
     }
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 36px rgba(34, 211, 238, 0.4);
-    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(34,211,238,0.4); }
     .btn-ghost {
-      background: rgba(255,255,255,0.03);
-      color: var(--text);
+      background: rgba(255,255,255,0.03); color: var(--text);
       border: 1px solid rgba(255,255,255,0.12);
     }
-    .btn-ghost:hover {
-      border-color: var(--primary);
-      color: var(--primary);
-      background: rgba(34, 211, 238, 0.06);
-    }
+    .btn-ghost:hover { border-color: var(--primary); color: var(--primary); background: rgba(34,211,238,0.06); }
     .hero-visual {
-      position: relative;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      border: 1px solid var(--border);
-      background: var(--bg-elevated);
-      box-shadow:
-        0 0 0 1px rgba(34, 211, 238, 0.05),
-        0 25px 50px -12px rgba(0,0,0,0.5),
-        0 0 80px -20px rgba(34, 211, 238, 0.15);
+      position: relative; border-radius: var(--radius-lg); overflow: hidden;
+      border: 1px solid var(--border); background: var(--bg-elevated);
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5), 0 0 80px -20px rgba(34,211,238,0.15);
       animation: fadeUp 0.9s 0.25s ease both;
     }
-    .hero-visual img {
-      width: 100%; height: 100%; object-fit: cover;
-      display: block; opacity: 0.88;
-      transition: transform 0.7s ease;
-    }
+    .hero-visual img { width: 100%; display: block; opacity: 0.88; transition: transform 0.7s; }
     .hero-visual:hover img { transform: scale(1.04); }
     .hero-visual::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: linear-gradient(to top, rgba(2,6,23,0.75) 0%, transparent 55%);
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(2,6,23,0.75), transparent 55%);
       pointer-events: none;
     }
     .hero-visual-badge {
       position: absolute; bottom: 1.25rem; left: 1.25rem; right: 1.25rem;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 0.9rem 1.1rem;
-      display: flex; align-items: center; gap: 0.9rem;
-      z-index: 2;
+      background: rgba(15,23,42,0.85); backdrop-filter: blur(12px);
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 0.9rem 1.1rem; display: flex; align-items: center; gap: 0.9rem; z-index: 2;
     }
-    .hero-visual-badge .live-dot {
-      width: 9px; height: 9px; border-radius: 50%;
-      background: #22c55e;
-      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
-      animation: live-pulse 2s infinite;
+    .live-dot {
+      width: 9px; height: 9px; border-radius: 50%; background: #22c55e;
+      box-shadow: 0 0 0 0 rgba(34,197,94,0.5); animation: live-pulse 2s infinite;
     }
     @keyframes live-pulse {
-      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+      0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
       70% { box-shadow: 0 0 0 8px transparent; }
       100% { box-shadow: 0 0 0 0 transparent; }
     }
-    .hero-visual-badge span {
-      font-size: 0.85rem; font-weight: 500; color: var(--text);
-    }
-    .hero-visual-badge small {
-      display: block; font-size: 0.75rem; color: var(--text-muted); margin-top: 1px;
-    }
-
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(24px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ========== SECTIONS ========== */
-    section {
-      padding: 6.5rem 2.5rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      position: relative;
-    }
-    .section-header {
-      text-align: center;
-      margin-bottom: 3.8rem;
-    }
+    /* SECTIONS */
+    section { padding: 6rem 2.5rem; max-width: 1200px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 3.5rem; }
     .section-label {
-      display: inline-block;
-      font-size: 0.78rem; font-weight: 600;
-      color: var(--primary); letter-spacing: 1.8px;
-      text-transform: uppercase; margin-bottom: 0.9rem;
+      display: inline-block; font-size: 0.78rem; font-weight: 600;
+      color: var(--primary); letter-spacing: 1.8px; text-transform: uppercase; margin-bottom: 0.85rem;
     }
     .section-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(1.85rem, 3.5vw, 2.5rem);
-      font-weight: 700; letter-spacing: -0.6px;
-      margin-bottom: 0.9rem;
+      font-size: clamp(1.8rem, 3.5vw, 2.45rem); font-weight: 700;
+      letter-spacing: -0.6px; margin-bottom: 0.85rem;
     }
-    .section-desc {
-      color: var(--text-muted);
-      font-size: 1.1rem; max-width: 580px; margin: 0 auto;
-    }
-
+    .section-desc { color: var(--text-muted); font-size: 1.08rem; max-width: 600px; margin: 0 auto; }
     .reveal {
-      opacity: 0;
-      transform: translateY(32px);
-      transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
-                  transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s, transform 0.7s;
     }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
     .reveal-delay-1 { transition-delay: 0.1s; }
     .reveal-delay-2 { transition-delay: 0.2s; }
     .reveal-delay-3 { transition-delay: 0.3s; }
 
-    /* ========== CARDS ========== */
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-    }
+    /* CARDS */
+    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.4rem; }
     .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 2rem;
-      backdrop-filter: blur(12px);
-      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.9rem; backdrop-filter: blur(12px);
+      transition: all 0.35s; position: relative; overflow: hidden;
     }
     .card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--primary), transparent);
-      opacity: 0;
-      transition: opacity 0.35s;
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0; transition: opacity 0.35s;
     }
     .card:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-6px);
-      box-shadow: 0 24px 48px -16px rgba(0,0,0,0.45), 0 0 40px -10px rgba(34, 211, 238, 0.1);
+      border-color: var(--border-hover); transform: translateY(-5px);
+      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.4);
     }
     .card:hover::before { opacity: 0.6; }
     .card-icon {
-      width: 52px; height: 52px;
-      background: linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(34, 211, 238, 0.04));
-      border: 1px solid rgba(34, 211, 238, 0.15);
-      border-radius: 14px;
+      width: 50px; height: 50px;
+      background: linear-gradient(135deg, rgba(34,211,238,0.12), rgba(34,211,238,0.04));
+      border: 1px solid rgba(34,211,238,0.15); border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
-      margin-bottom: 1.4rem;
-      color: var(--primary);
-      transition: all 0.3s;
+      margin-bottom: 1.3rem; color: var(--primary);
     }
-    .card:hover .card-icon {
-      background: linear-gradient(135deg, rgba(34, 211, 238, 0.2), rgba(34, 211, 238, 0.08));
-      box-shadow: 0 0 20px rgba(34, 211, 238, 0.15);
-    }
-    .card-icon svg { width: 24px; height: 24px; }
-    .card h3 {
-      font-size: 1.15rem; font-weight: 600;
-      margin-bottom: 0.65rem;
-    }
-    .card p {
-      color: var(--text-muted); font-size: 0.95rem;
-    }
+    .card-icon svg { width: 22px; height: 22px; }
+    .card h3 { font-size: 1.12rem; font-weight: 600; margin-bottom: 0.55rem; }
+    .card p { color: var(--text-muted); font-size: 0.94rem; }
 
-    /* ========== FEATURE ROWS ========== */
-    .feature-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4.5rem;
-      align-items: center;
-      margin-bottom: 5.5rem;
+    /* HOW IT WORKS */
+    .how-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;
     }
-    .feature-row:last-child { margin-bottom: 0; }
-    .feature-row:nth-child(even) { direction: rtl; }
-    .feature-row:nth-child(even) > * { direction: ltr; }
-    .feature-content h3 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.65rem; font-weight: 600;
-      margin-bottom: 1.1rem;
-      letter-spacing: -0.3px;
+    .how-step {
+      display: flex; gap: 1.2rem; margin-bottom: 1.8rem;
     }
-    .feature-content p {
-      color: var(--text-muted);
-      margin-bottom: 1.4rem; font-size: 1.05rem;
+    .how-num {
+      width: 42px; height: 42px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dim));
+      color: #000; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1.05rem;
     }
-    .feature-list {
-      list-style: none;
+    .how-step h4 { font-size: 1.1rem; margin-bottom: 0.35rem; }
+    .how-step p { color: var(--text-muted); font-size: 0.95rem; }
+    .video-wrap {
+      position: relative; border-radius: var(--radius); overflow: hidden;
+      border: 1px solid var(--border); aspect-ratio: 16/9;
+      background: #000; box-shadow: 0 20px 40px -15px rgba(0,0,0,0.45);
     }
-    .feature-list li {
-      display: flex; align-items: flex-start; gap: 0.75rem;
-      margin-bottom: 0.8rem; color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-    .feature-list li::before {
-      content: '';
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--primary);
-      margin-top: 0.5rem; flex-shrink: 0;
-      box-shadow: 0 0 8px var(--primary-glow);
-    }
-    .feature-image {
-      border-radius: var(--radius);
-      overflow: hidden;
-      border: 1px solid var(--border);
-      aspect-ratio: 4/3;
-      position: relative;
-      box-shadow: 0 20px 40px -15px rgba(0,0,0,0.4);
-    }
-    .feature-image img {
-      width: 100%; height: 100%; object-fit: cover;
-      transition: transform 0.6s ease;
-    }
-    .feature-image:hover img { transform: scale(1.05); }
+    .video-wrap iframe { width: 100%; height: 100%; border: 0; }
 
-    /* ========== LIVE DEMO SECTION ========== */
-    .demo-section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2.5rem 6.5rem;
+    /* 3D VIEWER */
+    #twin3d {
+      width: 100%; height: 420px; border-radius: var(--radius);
+      border: 1px solid var(--border); background: #0a0f1a;
+      overflow: hidden; position: relative;
     }
+    .twin3d-overlay {
+      position: absolute; top: 1rem; left: 1rem; z-index: 5;
+      background: rgba(15,23,42,0.85); backdrop-filter: blur(10px);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.7rem 1rem; font-size: 0.82rem; color: var(--text-muted);
+    }
+    .twin3d-overlay strong { color: var(--primary); }
+
+    /* VIDEO LIBRARY */
+    .video-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 1.4rem;
+    }
+    .video-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; transition: all 0.3s;
+    }
+    .video-card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
+    .video-thumb {
+      aspect-ratio: 16/9; background: #0a0f1a; position: relative;
+    }
+    .video-thumb iframe { width: 100%; height: 100%; border: 0; }
+    .video-info { padding: 1.1rem 1.2rem; }
+    .video-info h4 { font-size: 0.98rem; margin-bottom: 0.3rem; }
+    .video-info p { font-size: 0.85rem; color: var(--text-muted); }
+
+    /* DEMO */
     .demo-container {
-      background: linear-gradient(160deg, rgba(15, 23, 42, 0.9), rgba(2, 6, 23, 0.95));
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: 0 30px 60px -20px rgba(0,0,0,0.5), 0 0 80px -30px rgba(34, 211, 238, 0.12);
+      background: linear-gradient(160deg, rgba(15,23,42,0.9), rgba(2,6,23,0.95));
+      border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden;
     }
     .demo-header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 1.1rem 1.5rem;
-      background: rgba(15, 23, 42, 0.8);
-      border-bottom: 1px solid var(--border);
-      flex-wrap: wrap; gap: 1rem;
+      padding: 1rem 1.4rem; background: rgba(15,23,42,0.8); border-bottom: 1px solid var(--border);
+      flex-wrap: wrap; gap: 0.8rem;
     }
-    .demo-title {
-      display: flex; align-items: center; gap: 0.7rem;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 600; font-size: 1.05rem;
+    .demo-title { display: flex; align-items: center; gap: 0.6rem; font-weight: 600; font-size: 1rem; }
+    .live-indicator {
+      display: flex; align-items: center; gap: 0.35rem; font-size: 0.72rem;
+      color: var(--success); background: rgba(34,197,94,0.12);
+      padding: 0.2rem 0.65rem; border-radius: 100px;
     }
-    .demo-title .live-indicator {
-      display: flex; align-items: center; gap: 0.4rem;
-      font-size: 0.75rem; font-weight: 500;
-      color: var(--success);
-      background: rgba(34, 197, 94, 0.12);
-      padding: 0.25rem 0.7rem;
-      border-radius: 100px;
-    }
-    .demo-title .live-indicator span {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--success);
-      animation: live-pulse 2s infinite;
-    }
-    .demo-zones {
-      display: flex; gap: 0.4rem;
-    }
+    .live-indicator span { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: live-pulse 2s infinite; }
     .zone-btn {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.1);
-      color: var(--text-muted);
-      padding: 0.4rem 0.9rem;
-      border-radius: 8px;
-      font-size: 0.8rem; font-weight: 500;
-      cursor: pointer;
-      transition: all 0.25s;
+      background: transparent; border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted); padding: 0.35rem 0.8rem; border-radius: 8px;
+      font-size: 0.78rem; cursor: pointer; transition: all 0.25s;
     }
     .zone-btn:hover, .zone-btn.active {
-      background: rgba(34, 211, 238, 0.1);
-      border-color: var(--primary);
-      color: var(--primary);
+      background: rgba(34,211,238,0.1); border-color: var(--primary); color: var(--primary);
     }
-    .demo-body {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr 1fr;
-      gap: 0;
-      min-height: 480px;
-    }
-    .demo-panel {
-      padding: 1.4rem;
-      border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; gap: 1.2rem;
-    }
+    .demo-body { display: grid; grid-template-columns: 1fr 1.3fr 1fr; min-height: 380px; }
+    .demo-panel { padding: 1.2rem; border-right: 1px solid var(--border); display: flex; flex-direction: column; gap: 1rem; }
     .demo-panel:last-child { border-right: none; }
-    .panel-label {
-      font-size: 0.72rem; font-weight: 600;
-      letter-spacing: 1.2px; text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 0.2rem;
-    }
-
-    /* Gauges */
-    .gauge-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    .gauge {
-      text-align: center;
-    }
-    .gauge-ring {
-      position: relative;
-      width: 90px; height: 90px;
-      margin: 0 auto 0.5rem;
-    }
-    .gauge-ring svg {
-      width: 100%; height: 100%;
-      transform: rotate(-90deg);
-    }
-    .gauge-ring circle {
-      fill: none;
-      stroke-width: 7;
-    }
+    .panel-label { font-size: 0.7rem; font-weight: 600; letter-spacing: 1.1px; text-transform: uppercase; color: var(--text-muted); }
+    .gauge-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+    .gauge { text-align: center; }
+    .gauge-ring { position: relative; width: 80px; height: 80px; margin: 0 auto 0.4rem; }
+    .gauge-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .gauge-ring circle { fill: none; stroke-width: 7; }
     .gauge-bg { stroke: rgba(255,255,255,0.06); }
-    .gauge-fill {
-      stroke: var(--primary);
-      stroke-linecap: round;
-      transition: stroke-dashoffset 1s ease, stroke 0.4s;
-    }
+    .gauge-fill { stroke: var(--primary); stroke-linecap: round; transition: stroke-dashoffset 1s; }
     .gauge-value {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.15rem; font-weight: 700;
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk', sans-serif; font-size: 1.05rem; font-weight: 700;
     }
-    .gauge-label {
-      font-size: 0.78rem; color: var(--text-muted);
-    }
-
-    /* Metrics list */
+    .gauge-label { font-size: 0.75rem; color: var(--text-muted); }
     .metric-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0.55rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      font-size: 0.88rem;
+      display: flex; justify-content: space-between; padding: 0.45rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 0.85rem;
     }
-    .metric-row:last-child { border-bottom: none; }
     .metric-name { color: var(--text-muted); }
-    .metric-val {
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-    }
+    .metric-val { font-weight: 600; }
     .metric-val.up { color: var(--success); }
-    .metric-val.down { color: var(--danger); }
     .metric-val.warn { color: var(--warning); }
-
-    /* Equipment cards */
-    .equip-list {
-      display: flex; flex-direction: column; gap: 0.7rem;
-      flex: 1;
-    }
     .equip-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px;
-      padding: 0.85rem 1rem;
-      display: flex; align-items: center; gap: 0.85rem;
-      transition: all 0.25s;
-      cursor: pointer;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 10px; padding: 0.7rem 0.9rem; display: flex; align-items: center; gap: 0.7rem;
     }
-    .equip-card:hover {
-      background: rgba(34, 211, 238, 0.06);
-      border-color: rgba(34, 211, 238, 0.2);
-    }
-    .equip-status {
-      width: 10px; height: 10px; border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .equip-status.healthy { background: var(--success); box-shadow: 0 0 8px rgba(34,197,94,0.4); }
-    .equip-status.warning { background: var(--warning); box-shadow: 0 0 8px rgba(234,179,8,0.4); }
-    .equip-status.critical { background: var(--danger); box-shadow: 0 0 8px rgba(239,68,68,0.4); }
-    .equip-info { flex: 1; min-width: 0; }
-    .equip-name {
-      font-size: 0.88rem; font-weight: 600;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .equip-meta {
-      font-size: 0.75rem; color: var(--text-muted);
-    }
-    .equip-health {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 0.95rem; font-weight: 700;
-    }
-
-    /* Risk map */
+    .equip-status { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+    .equip-status.healthy { background: var(--success); }
+    .equip-status.warning { background: var(--warning); }
+    .equip-status.critical { background: var(--danger); }
+    .equip-name { font-size: 0.85rem; font-weight: 600; }
+    .equip-meta { font-size: 0.72rem; color: var(--text-muted); }
+    .equip-health { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.9rem; margin-left: auto; }
     .risk-map {
-      flex: 1;
-      background: rgba(0,0,0,0.25);
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.05);
-      position: relative;
-      overflow: hidden;
-      min-height: 200px;
+      flex: 1; background: rgba(0,0,0,0.25); border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.05); min-height: 140px; position: relative;
     }
     .risk-map-grid {
-      position: absolute; inset: 0;
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      grid-template-rows: repeat(5, 1fr);
-      gap: 3px;
-      padding: 8px;
+      position: absolute; inset: 0; display: grid;
+      grid-template-columns: repeat(6,1fr); grid-template-rows: repeat(4,1fr);
+      gap: 3px; padding: 6px;
     }
-    .risk-cell {
-      border-radius: 4px;
-      background: rgba(34, 211, 238, 0.08);
-      transition: background 0.6s ease;
-      cursor: pointer;
-    }
-    .risk-cell.low { background: rgba(34, 197, 94, 0.25); }
-    .risk-cell.med { background: rgba(234, 179, 8, 0.35); }
-    .risk-cell.high { background: rgba(239, 68, 68, 0.4); }
-    .risk-cell:hover { filter: brightness(1.3); }
-    .risk-legend {
-      display: flex; gap: 1rem; justify-content: center;
-      margin-top: 0.6rem; font-size: 0.72rem; color: var(--text-muted);
-    }
-    .risk-legend span {
-      display: flex; align-items: center; gap: 0.35rem;
-    }
-    .risk-legend i {
-      width: 10px; height: 10px; border-radius: 3px;
-    }
-
-    /* Alert feed */
-    .alert-feed {
-      display: flex; flex-direction: column; gap: 0.6rem;
-      max-height: 180px;
-      overflow-y: auto;
-    }
+    .risk-cell { border-radius: 3px; background: rgba(34,211,238,0.08); transition: background 0.5s; }
+    .risk-cell.low { background: rgba(34,197,94,0.25); }
+    .risk-cell.med { background: rgba(234,179,8,0.35); }
+    .risk-cell.high { background: rgba(239,68,68,0.4); }
     .alert-item {
-      display: flex; gap: 0.7rem;
-      padding: 0.7rem 0.85rem;
-      background: rgba(255,255,255,0.03);
-      border-radius: 10px;
-      border-left: 3px solid;
-      font-size: 0.82rem;
-      animation: alertIn 0.4s ease;
-    }
-    @keyframes alertIn {
-      from { opacity: 0; transform: translateX(-12px); }
-      to { opacity: 1; transform: translateX(0); }
+      display: flex; gap: 0.6rem; padding: 0.6rem 0.75rem;
+      background: rgba(255,255,255,0.03); border-radius: 8px;
+      border-left: 3px solid; font-size: 0.8rem; margin-bottom: 0.5rem;
     }
     .alert-item.info { border-color: var(--primary); }
     .alert-item.warning { border-color: var(--warning); }
     .alert-item.critical { border-color: var(--danger); }
-    .alert-time {
-      font-size: 0.7rem; color: var(--text-muted);
-      white-space: nowrap;
-    }
-    .alert-text { color: var(--text); }
-
-    /* Scenario controls */
+    .alert-time { font-size: 0.68rem; color: var(--text-muted); }
     .demo-footer {
-      padding: 1.1rem 1.5rem;
-      background: rgba(15, 23, 42, 0.7);
-      border-top: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 1rem;
-    }
-    .scenario-label {
-      font-size: 0.85rem; color: var(--text-muted);
-      font-weight: 500;
-    }
-    .scenario-btns {
-      display: flex; gap: 0.5rem; flex-wrap: wrap;
+      padding: 0.9rem 1.4rem; background: rgba(15,23,42,0.7);
+      border-top: 1px solid var(--border); display: flex; align-items: center;
+      justify-content: space-between; flex-wrap: wrap; gap: 0.8rem;
     }
     .scenario-btn {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: var(--text);
-      padding: 0.55rem 1.1rem;
-      border-radius: 10px;
-      font-size: 0.85rem; font-weight: 500;
-      cursor: pointer;
-      transition: all 0.25s;
-      display: flex; align-items: center; gap: 0.4rem;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text); padding: 0.45rem 0.95rem; border-radius: 8px;
+      font-size: 0.82rem; cursor: pointer; transition: all 0.25s;
     }
-    .scenario-btn:hover {
-      background: rgba(34, 211, 238, 0.1);
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-    .scenario-btn.active {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dim));
-      color: #000;
-      border-color: transparent;
-      box-shadow: 0 4px 16px rgba(34, 211, 238, 0.3);
-    }
-    .demo-note {
-      font-size: 0.78rem; color: var(--text-muted);
-      opacity: 0.7;
+    .scenario-btn:hover, .scenario-btn.active {
+      background: rgba(34,211,238,0.12); border-color: var(--primary); color: var(--primary);
     }
 
-    /* Chart */
-    .mini-chart {
-      height: 90px;
-      position: relative;
+    /* COLLABORATE */
+    .collab-grid {
+      display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem;
     }
-    .mini-chart canvas {
-      width: 100%; height: 100%;
+    .collab-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 2rem; transition: all 0.3s;
     }
+    .collab-card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
+    .collab-card h3 { font-size: 1.2rem; margin-bottom: 0.6rem; }
+    .collab-card p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.2rem; }
+    .collab-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.3rem; }
+    .tag {
+      font-size: 0.75rem; padding: 0.25rem 0.7rem; border-radius: 100px;
+      background: rgba(34,211,238,0.1); color: var(--primary); border: 1px solid rgba(34,211,238,0.2);
+    }
+    .collab-cta {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      color: var(--primary); font-weight: 600; font-size: 0.9rem; text-decoration: none;
+    }
+    .collab-cta:hover { text-decoration: underline; }
 
-    /* ========== STATS ========== */
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.4rem;
-    }
+    /* STATS */
+    .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.3rem; }
     .stat-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 2.2rem 1.5rem;
-      text-align: center;
-      transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 2rem 1.3rem; text-align: center; transition: all 0.3s;
     }
-    .stat-card::after {
-      content: '';
-      position: absolute; bottom: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--primary), transparent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .stat-card:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-4px);
-    }
-    .stat-card:hover::after { opacity: 1; }
+    .stat-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
     .stat-number {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 2.3rem; font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 0.45rem;
-      letter-spacing: -1px;
+      font-family: 'Space Grotesk', sans-serif; font-size: 2.1rem; font-weight: 700;
+      color: var(--primary); margin-bottom: 0.35rem;
     }
-    .stat-label {
-      color: var(--text-muted); font-size: 0.9rem;
-    }
+    .stat-label { color: var(--text-muted); font-size: 0.88rem; }
 
-    /* ========== STEPS ========== */
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
-      position: relative;
-    }
-    .steps::before {
-      content: '';
-      position: absolute;
-      top: 21px; left: 12%; right: 12%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border), transparent);
-      z-index: 0;
-    }
-    .step {
-      text-align: center;
-      position: relative; z-index: 1;
-    }
-    .step-num {
-      width: 44px; height: 44px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dim));
-      color: #000; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 1.1rem;
-      margin: 0 auto 1.3rem;
-      box-shadow: 0 4px 20px rgba(34, 211, 238, 0.25);
-      transition: transform 0.3s;
-    }
-    .step:hover .step-num { transform: scale(1.08); }
-    .step h4 {
-      font-size: 1.05rem; margin-bottom: 0.55rem; font-weight: 600;
-    }
-    .step p {
-      color: var(--text-muted); font-size: 0.9rem;
-    }
-
-    /* ========== TECH STACK ========== */
-    .tech-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-    }
-    .tech-item {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.5rem 1.4rem;
-      display: flex; align-items: flex-start; gap: 1rem;
-      transition: all 0.3s;
-    }
-    .tech-item:hover {
-      border-color: var(--border-hover);
-      background: rgba(15, 23, 42, 0.85);
-    }
-    .tech-icon {
-      width: 40px; height: 40px;
-      background: rgba(34, 211, 238, 0.1);
-      border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--primary); flex-shrink: 0;
-    }
-    .tech-icon svg { width: 20px; height: 20px; }
-    .tech-item h4 {
-      font-size: 0.98rem; font-weight: 600; margin-bottom: 0.25rem;
-    }
-    .tech-item p {
-      font-size: 0.85rem; color: var(--text-muted);
-    }
-
-    /* ========== FOUNDER ========== */
+    /* FOUNDER */
     .founder-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 3rem;
-      display: flex; gap: 2.5rem; align-items: center;
-      max-width: 820px; margin: 0 auto;
-      position: relative;
-      overflow: hidden;
-    }
-    .founder-card::before {
-      content: '';
-      position: absolute; top: -50%; right: -20%;
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(34, 211, 238, 0.08), transparent 70%);
-      pointer-events: none;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 2.8rem;
+      display: flex; gap: 2.3rem; align-items: center; max-width: 800px; margin: 0 auto;
     }
     .founder-avatar {
-      width: 120px; height: 120px; border-radius: 22px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2.7rem; font-weight: 700; color: #000;
-      flex-shrink: 0;
+      width: 130px; height: 130px; border-radius: 22px;
+      overflow: hidden; flex-shrink: 0;
       box-shadow: 0 12px 40px rgba(34, 211, 238, 0.25);
+      border: 3px solid rgba(34, 211, 238, 0.35);
       position: relative; z-index: 1;
     }
-    .founder-info h3 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.55rem; margin-bottom: 0.3rem;
+    .founder-avatar img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      display: block;
     }
-    .founder-role {
-      color: var(--primary); font-weight: 500;
-      margin-bottom: 1.1rem; font-size: 0.95rem;
-    }
-    .founder-info p {
-      color: var(--text-muted); font-size: 0.98rem;
-      position: relative; z-index: 1;
-    }
+    .founder-info h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.45rem; margin-bottom: 0.25rem; }
+    .founder-role { color: var(--primary); font-weight: 500; margin-bottom: 0.9rem; font-size: 0.95rem; }
+    .founder-info p { color: var(--text-muted); font-size: 0.96rem; }
 
-    /* ========== CONTACT ========== */
+    /* CONTACT */
     .contact-box {
-      background: linear-gradient(145deg, rgba(34, 211, 238, 0.07), rgba(249, 115, 22, 0.04));
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 3.8rem 2.5rem;
-      text-align: center;
-      max-width: 580px; margin: 0 auto;
-      position: relative;
-      overflow: hidden;
+      background: linear-gradient(145deg, rgba(34,211,238,0.07), rgba(249,115,22,0.04));
+      border: 1px solid var(--border); border-radius: var(--radius-lg);
+      padding: 3.5rem 2.3rem; text-align: center; max-width: 560px; margin: 0 auto;
     }
-    .contact-box::before {
-      content: '';
-      position: absolute; top: -40%; left: 50%;
-      transform: translateX(-50%);
-      width: 280px; height: 280px;
-      background: radial-gradient(circle, rgba(34, 211, 238, 0.12), transparent 70%);
-      pointer-events: none;
-    }
-    .contact-box h3 {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.7rem; margin-bottom: 0.75rem;
-      position: relative;
-    }
-    .contact-box p {
-      color: var(--text-muted); margin-bottom: 2rem;
-      position: relative;
-    }
+    .contact-box h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.6rem; margin-bottom: 0.7rem; }
+    .contact-box p { color: var(--text-muted); margin-bottom: 1.8rem; }
     .email-btn {
-      display: inline-flex; align-items: center; gap: 0.65rem;
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid var(--primary);
-      color: var(--primary);
-      padding: 1rem 2rem;
-      border-radius: 12px;
-      font-size: 1.05rem; font-weight: 600;
-      text-decoration: none;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.2);
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: rgba(15,23,42,0.8); border: 1px solid var(--primary);
+      color: var(--primary); padding: 0.95rem 1.9rem; border-radius: 12px;
+      font-size: 1.05rem; font-weight: 600; text-decoration: none; transition: all 0.3s;
     }
-    .email-btn:hover {
-      background: var(--primary); color: #000;
-      box-shadow: 0 8px 32px rgba(34, 211, 238, 0.35);
-      transform: translateY(-2px);
-    }
+    .email-btn:hover { background: var(--primary); color: #000; transform: translateY(-2px); }
 
-    /* ========== FOOTER ========== */
     footer {
-      border-top: 1px solid var(--border);
-      padding: 3.5rem 2.5rem 2.5rem;
-      text-align: center;
-      background: rgba(2, 6, 23, 0.6);
+      border-top: 1px solid var(--border); padding: 3rem 2.5rem 2.2rem;
+      text-align: center; background: rgba(2,6,23,0.6);
     }
-    footer .logo { display: inline-flex; margin-bottom: 1.1rem; }
-    footer p { color: var(--text-muted); font-size: 0.9rem; }
-    .footer-tagline {
-      margin-top: 0.4rem;
-      font-size: 0.88rem !important;
-      opacity: 0.85;
-    }
-    .footer-copy {
-      margin-top: 1.4rem;
-      font-size: 0.82rem !important;
-      opacity: 0.55;
-    }
+    footer .logo { display: inline-flex; margin-bottom: 0.9rem; }
+    footer p { color: var(--text-muted); font-size: 0.88rem; }
 
-    /* ========== RESPONSIVE ========== */
+    /* RESPONSIVE */
     @media (max-width: 1100px) {
       .demo-body { grid-template-columns: 1fr 1fr; }
-      .demo-panel:nth-child(3) {
-        grid-column: 1 / -1;
-        border-right: none;
-        border-top: 1px solid var(--border);
-      }
+      .demo-panel:nth-child(3) { grid-column: 1/-1; border-right: none; border-top: 1px solid var(--border); }
     }
     @media (max-width: 1024px) {
-      .hero-grid, .feature-row, .grid-3, .steps, .stats, .tech-grid {
-        grid-template-columns: 1fr;
-      }
-      .feature-row:nth-child(even) { direction: ltr; }
-      .hero-visual { max-height: 380px; }
-      .steps::before { display: none; }
-      .tech-grid { grid-template-columns: 1fr 1fr; }
+      .hero-grid, .grid-3, .how-grid, .video-grid, .collab-grid, .stats { grid-template-columns: 1fr; }
+      .hero-visual { max-height: 360px; }
     }
     @media (max-width: 768px) {
-      nav { padding: 0 1.4rem; }
+      nav { padding: 0 1.3rem; }
       .nav-links { display: none; }
       .hamburger { display: flex; }
-      section, .demo-section { padding: 4.5rem 1.4rem; }
-      .hero { padding: 7rem 1.4rem 4rem; }
-      .founder-card {
-        flex-direction: column;
-        text-align: center;
-        padding: 2.2rem 1.6rem;
-      }
-      .tech-grid { grid-template-columns: 1fr; }
-      .stats { grid-template-columns: 1fr 1fr; }
+      section { padding: 4.2rem 1.3rem; }
+      .hero { padding: 7rem 1.3rem 4rem; }
+      .founder-card { flex-direction: column; text-align: center; }
       .demo-body { grid-template-columns: 1fr; }
       .demo-panel { border-right: none; border-bottom: 1px solid var(--border); }
-      .demo-panel:last-child { border-bottom: none; }
-      .demo-header { flex-direction: column; align-items: flex-start; }
-    }
-    @media (max-width: 480px) {
-      .stats { grid-template-columns: 1fr; }
-      .hero-buttons { flex-direction: column; }
-      .btn { justify-content: center; }
     }
   </style>
 </head>
 <body>
-  <!-- NAVBAR -->
+  <!-- NAV -->
   <nav id="navbar">
-    <a href="#" class="logo">
-      Mine<span>Mirror</span> AI
-      <span class="logo-dot"></span>
-    </a>
+    <a href="#" class="logo">Mine<span>Mirror</span> AI <span class="logo-dot"></span></a>
     <ul class="nav-links">
       <li><a href="#overview">Overview</a></li>
-      <li><a href="#challenges">Challenges</a></li>
-      <li><a href="#capabilities">Capabilities</a></li>
+      <li><a href="#how">How it Works</a></li>
       <li><a href="#demo">Live Demo</a></li>
-      <li><a href="#approach">Approach</a></li>
-      <li><a href="#tech">Technology</a></li>
-      <li><a href="#founder">Founder</a></li>
-      <li><a href="#contact" class="nav-cta">Enquire</a></li>
+      <li><a href="#3d">3D Twin</a></li>
+      <li><a href="#videos">Videos</a></li>
+      <li><a href="#collaborate">Collaborate</a></li>
+      <li><a href="#contact" class="nav-cta">Work With Me</a></li>
     </ul>
-    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
   </nav>
-
   <div class="mobile-overlay" id="mobileOverlay"></div>
   <div class="mobile-menu" id="mobileMenu">
     <a href="#overview">Overview</a>
-    <a href="#challenges">Challenges</a>
-    <a href="#capabilities">Capabilities</a>
+    <a href="#how">How it Works</a>
     <a href="#demo">Live Demo</a>
-    <a href="#approach">Approach</a>
-    <a href="#tech">Technology</a>
-    <a href="#founder">Founder</a>
-    <a href="#contact">Enquire</a>
+    <a href="#3d">3D Twin</a>
+    <a href="#videos">Videos</a>
+    <a href="#collaborate">Collaborate</a>
+    <a href="#contact">Work With Me</a>
   </div>
 
   <!-- HERO -->
@@ -1057,31 +551,24 @@
     <canvas id="particles"></canvas>
     <div class="hero-grid">
       <div>
-        <div class="badge">
-          <span class="badge-pulse"></span>
-          Physics-Informed Digital Twin
-        </div>
+        <div class="badge"><span class="badge-pulse"></span> Physics-Informed Digital Twin</div>
         <h1>Intelligent Digital Twin for <span>Modern Mining</span></h1>
         <p class="hero-lead">
-          MineMirror AI creates a living virtual replica of your mine.
-          It continuously monitors operations, anticipates risks, and enables
-          safer, more efficient decision-making in real time.
+          MineMirror AI creates a living virtual replica of your mine. Continuously monitors operations,
+          anticipates risks, and enables safer, more efficient decisions in real time.
         </p>
         <div class="hero-buttons">
-          <a href="#contact" class="btn btn-primary">
-            Request a Discussion
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-          <a href="#demo" class="btn btn-ghost">Try Live Demo</a>
+          <a href="#collaborate" class="btn btn-primary">Collaborate With Us</a>
+          <a href="#demo" class="btn btn-ghost">Explore Live Demo</a>
         </div>
       </div>
       <div class="hero-visual">
-        <img src="https://images.unsplash.com/photo-1581094794329-c8112c4e513b?w=900&q=80" alt="Advanced mining operations and digital systems" />
+        <img src="https://images.unsplash.com/photo-1581094794329-c8112c4e513b?w=900&q=80" alt="Mining digital systems" loading="lazy" />
         <div class="hero-visual-badge">
           <div class="live-dot"></div>
           <div>
-            <span>Live Digital Twin</span>
-            <small>Synchronised with physical operations</small>
+            <span style="font-size:0.85rem;font-weight:500">Live Digital Twin</span>
+            <small style="display:block;font-size:0.75rem;color:var(--text-muted)">Synchronised with physical operations</small>
           </div>
         </div>
       </div>
@@ -1093,459 +580,278 @@
     <div class="section-header reveal">
       <div class="section-label">Platform Overview</div>
       <h2 class="section-title">A Digital Twin Built for Mining Reality</h2>
-      <p class="section-desc">
-        A continuously synchronised virtual representation of the physical mine,
-        designed to deliver actionable intelligence before issues escalate.
-      </p>
+      <p class="section-desc">A continuously synchronised virtual representation of the physical mine, delivering actionable intelligence before issues escalate.</p>
     </div>
     <div class="grid-3">
       <div class="card reveal reveal-delay-1">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <h3>Predictive Safety</h3>
         <p>Early detection of geotechnical instability and hazardous conditions with meaningful lead time for intervention.</p>
       </div>
       <div class="card reveal reveal-delay-2">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-        </div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
         <h3>Asset Reliability</h3>
         <p>Continuous health monitoring of critical equipment to reduce unplanned downtime and optimise maintenance cycles.</p>
       </div>
       <div class="card reveal reveal-delay-3">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
         <h3>Workforce Protection</h3>
         <p>Real-time tracking of environmental exposure to support healthier working conditions and regulatory compliance.</p>
       </div>
     </div>
   </section>
 
-  <!-- CHALLENGES -->
-  <section id="challenges">
+  <!-- HOW DIGITAL TWIN WORKS -->
+  <section id="how">
     <div class="section-header reveal">
-      <div class="section-label">Industry Challenges</div>
-      <h2 class="section-title">Persistent Risks in Mining Operations</h2>
-      <p class="section-desc">
-        Despite technological progress, many mines still operate with reactive systems
-        that limit foresight and increase operational risk.
-      </p>
+      <div class="section-label">Education</div>
+      <h2 class="section-title">How a Digital Twin Works in Mining</h2>
+      <p class="section-desc">A physics-informed digital twin is not just a 3D model. It is a living system that mirrors the real mine in real time.</p>
     </div>
-    <div class="grid-3">
-      <div class="card reveal reveal-delay-1">
-        <h3>Geotechnical Uncertainty</h3>
-        <p>Rock bursts and structural failures often occur with limited warning. Traditional monitoring struggles with sparse failure data.</p>
-      </div>
-      <div class="card reveal reveal-delay-2">
-        <h3>Equipment Downtime</h3>
-        <p>Unexpected failures of critical assets lead to significant production losses and elevated maintenance costs.</p>
-      </div>
-      <div class="card reveal reveal-delay-3">
-        <h3>Occupational Exposure</h3>
-        <p>Dust, heat, noise and vibration accumulate over time. Real-time visibility into individual exposure remains limited.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- CAPABILITIES -->
-  <section id="capabilities">
-    <div class="section-header reveal">
-      <div class="section-label">Core Capabilities</div>
-      <h2 class="section-title">How MineMirror AI Delivers Value</h2>
-    </div>
-
-    <div class="feature-row reveal">
-      <div class="feature-content">
-        <h3>Anticipatory Risk Detection</h3>
-        <p>
-          Continuous analysis of sensor and operational data enables early identification
-          of developing risks, providing teams with actionable time to respond.
-        </p>
-        <ul class="feature-list">
-          <li>Geotechnical stress and micro-seismic pattern recognition</li>
-          <li>Multi-parameter environmental monitoring</li>
-          <li>Clear alerts delivered to control rooms and mobile devices</li>
-        </ul>
-      </div>
-      <div class="feature-image">
-        <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=800&q=80" alt="Industrial monitoring and sensor systems" />
-      </div>
-    </div>
-
-    <div class="feature-row reveal">
-      <div class="feature-content">
-        <h3>Equipment Health Intelligence</h3>
-        <p>
-          Each critical asset maintains its own digital representation.
-          Degradation trends are tracked so maintenance can be planned on actual condition rather than fixed schedules.
-        </p>
-        <ul class="feature-list">
-          <li>Remaining useful life estimation</li>
-          <li>Vibration, thermal and performance trend analysis</li>
-          <li>Reduced unplanned stoppages</li>
-        </ul>
-      </div>
-      <div class="feature-image">
-        <img src="https://images.unsplash.com/photo-1565043666747-69f6646db940?w=800&q=80" alt="Heavy mining equipment and machinery" />
-      </div>
-    </div>
-
-    <div class="feature-row reveal">
-      <div class="feature-content">
-        <h3>Operational Scenario Testing</h3>
-        <p>
-          Before implementing changes in the physical environment,
-          scenarios can be evaluated inside the digital twin — reducing risk and improving decision quality.
-        </p>
-        <ul class="feature-list">
-          <li>Blast design and material flow evaluation</li>
-          <li>Ventilation and environmental impact assessment</li>
-          <li>Resource and energy optimisation studies</li>
-        </ul>
-      </div>
-      <div class="feature-image">
-        <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc5d?w=800&q=80" alt="Data analytics and digital twin systems" />
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== LIVE DEMO ========== -->
-  <section id="demo" style="padding-bottom: 2rem;">
-    <div class="section-header reveal">
-      <div class="section-label">Interactive Experience</div>
-      <h2 class="section-title">Live Digital Twin Demo</h2>
-      <p class="section-desc">
-        Explore a simulated real-time view of MineMirror AI. Switch zones, run scenarios,
-        and watch predictive intelligence respond.
-      </p>
-    </div>
-  </section>
-
-  <div class="demo-section reveal">
-    <div class="demo-container">
-      <!-- Header -->
-      <div class="demo-header">
-        <div class="demo-title">
-          MineMirror Control Room
-          <div class="live-indicator"><span></span> LIVE</div>
+    <div class="how-grid reveal">
+      <div>
+        <div class="how-step">
+          <div class="how-num">1</div>
+          <div>
+            <h4>Data Acquisition</h4>
+            <p>Sensors, SCADA, equipment telemetry, geological models, drone surveys and existing control systems continuously feed live data into the twin.</p>
+          </div>
         </div>
-        <div class="demo-zones">
+        <div class="how-step">
+          <div class="how-num">2</div>
+          <div>
+            <h4>Physics + AI Fusion</h4>
+            <p>First-principles models (rock mechanics, fluid flow, thermodynamics) are combined with machine-learning patterns so the twin remains accurate even with sparse failure data.</p>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">3</div>
+          <div>
+            <h4>Synchronised Virtual Mine</h4>
+            <p>A high-fidelity 3D representation stays locked to real conditions — geometry, stress, equipment health, environment and production flow.</p>
+          </div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">4</div>
+          <div>
+            <h4>Prediction & Action</h4>
+            <p>The twin runs forward simulations, detects anomalies, estimates remaining useful life and delivers clear alerts and recommended actions to operators and planners.</p>
+          </div>
+        </div>
+      </div>
+      <div class="video-wrap">
+        <iframe src="https://www.youtube.com/embed/KYU_cP_5hMQ?rel=0" title="Digital Twin Applications for Mining Processes" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE DEMO -->
+  <section id="demo" style="padding-bottom:1rem">
+    <div class="section-header reveal">
+      <div class="section-label">Interactive</div>
+      <h2 class="section-title">Live Control-Room Demo</h2>
+      <p class="section-desc">Switch zones, run scenarios and watch the twin respond in real time.</p>
+    </div>
+  </section>
+  <div style="max-width:1200px;margin:0 auto 5rem;padding:0 2.5rem" class="reveal">
+    <div class="demo-container">
+      <div class="demo-header">
+        <div class="demo-title">MineMirror Control Room <div class="live-indicator"><span></span> LIVE</div></div>
+        <div style="display:flex;gap:0.4rem">
           <button class="zone-btn active" data-zone="north">North Face</button>
           <button class="zone-btn" data-zone="central">Central Pit</button>
           <button class="zone-btn" data-zone="south">South Decline</button>
         </div>
       </div>
-
-      <!-- Body -->
       <div class="demo-body">
-        <!-- Left: Metrics + Gauges -->
         <div class="demo-panel">
           <div>
             <div class="panel-label">Key Metrics</div>
             <div class="gauge-grid">
               <div class="gauge">
                 <div class="gauge-ring">
-                  <svg viewBox="0 0 36 36">
-                    <circle class="gauge-bg" cx="18" cy="18" r="15.5"/>
-                    <circle class="gauge-fill" id="gaugeSafety" cx="18" cy="18" r="15.5"
-                      stroke-dasharray="97.4" stroke-dashoffset="20"/>
-                  </svg>
-                  <div class="gauge-value" id="valSafety">79%</div>
+                  <svg viewBox="0 0 36 36"><circle class="gauge-bg" cx="18" cy="18" r="15.5"/><circle class="gauge-fill" id="gSafety" cx="18" cy="18" r="15.5" stroke-dasharray="97.4" stroke-dashoffset="20"/></svg>
+                  <div class="gauge-value" id="vSafety">79%</div>
                 </div>
                 <div class="gauge-label">Safety Index</div>
               </div>
               <div class="gauge">
                 <div class="gauge-ring">
-                  <svg viewBox="0 0 36 36">
-                    <circle class="gauge-bg" cx="18" cy="18" r="15.5"/>
-                    <circle class="gauge-fill" id="gaugeUptime" cx="18" cy="18" r="15.5"
-                      stroke-dasharray="97.4" stroke-dashoffset="12" style="stroke:#22c55e"/>
-                  </svg>
-                  <div class="gauge-value" id="valUptime">88%</div>
+                  <svg viewBox="0 0 36 36"><circle class="gauge-bg" cx="18" cy="18" r="15.5"/><circle class="gauge-fill" id="gUptime" cx="18" cy="18" r="15.5" stroke-dasharray="97.4" stroke-dashoffset="12" style="stroke:#22c55e"/></svg>
+                  <div class="gauge-value" id="vUptime">88%</div>
                 </div>
                 <div class="gauge-label">Fleet Uptime</div>
               </div>
             </div>
           </div>
-
           <div>
             <div class="panel-label">Live Readings</div>
-            <div class="metric-row">
-              <span class="metric-name">Seismic Events</span>
-              <span class="metric-val" id="mSeismic">3 / hr</span>
-            </div>
-            <div class="metric-row">
-              <span class="metric-name">Avg. Vibration</span>
-              <span class="metric-val" id="mVib">2.4 mm/s</span>
-            </div>
-            <div class="metric-row">
-              <span class="metric-name">Dust Level</span>
-              <span class="metric-val warn" id="mDust">1.8 mg/m³</span>
-            </div>
-            <div class="metric-row">
-              <span class="metric-name">Air Velocity</span>
-              <span class="metric-val up" id="mAir">1.2 m/s</span>
-            </div>
-            <div class="metric-row">
-              <span class="metric-name">Ground Temp</span>
-              <span class="metric-val" id="mTemp">28.4 °C</span>
-            </div>
-          </div>
-
-          <div>
-            <div class="panel-label">Trend (Last 60 min)</div>
-            <div class="mini-chart">
-              <canvas id="trendChart"></canvas>
-            </div>
+            <div class="metric-row"><span class="metric-name">Seismic</span><span class="metric-val" id="mSeismic">3 / hr</span></div>
+            <div class="metric-row"><span class="metric-name">Vibration</span><span class="metric-val" id="mVib">2.4 mm/s</span></div>
+            <div class="metric-row"><span class="metric-name">Dust</span><span class="metric-val warn" id="mDust">1.8 mg/m³</span></div>
+            <div class="metric-row"><span class="metric-name">Air Velocity</span><span class="metric-val up" id="mAir">1.2 m/s</span></div>
           </div>
         </div>
-
-        <!-- Center: Equipment + Risk Map -->
         <div class="demo-panel">
           <div>
             <div class="panel-label">Critical Assets</div>
-            <div class="equip-list" id="equipList">
-              <div class="equip-card">
-                <div class="equip-status healthy"></div>
-                <div class="equip-info">
-                  <div class="equip-name">Dragline DL-07</div>
-                  <div class="equip-meta">RUL 1,240 hrs · Normal</div>
-                </div>
-                <div class="equip-health" style="color:var(--success)">94%</div>
-              </div>
-              <div class="equip-card">
-                <div class="equip-status warning"></div>
-                <div class="equip-info">
-                  <div class="equip-name">Haul Truck HT-22</div>
-                  <div class="equip-meta">RUL 310 hrs · Elevated vib</div>
-                </div>
-                <div class="equip-health" style="color:var(--warning)">71%</div>
-              </div>
-              <div class="equip-card">
-                <div class="equip-status healthy"></div>
-                <div class="equip-info">
-                  <div class="equip-name">Shovel SH-04</div>
-                  <div class="equip-meta">RUL 890 hrs · Normal</div>
-                </div>
-                <div class="equip-health" style="color:var(--success)">89%</div>
-              </div>
-              <div class="equip-card">
-                <div class="equip-status critical"></div>
-                <div class="equip-info">
-                  <div class="equip-name">Conveyor CV-12</div>
-                  <div class="equip-meta">RUL 48 hrs · Thermal spike</div>
-                </div>
-                <div class="equip-health" style="color:var(--danger)">42%</div>
-              </div>
+            <div style="display:flex;flex-direction:column;gap:0.55rem">
+              <div class="equip-card"><div class="equip-status healthy"></div><div><div class="equip-name">Dragline DL-07</div><div class="equip-meta">RUL 1,240 hrs</div></div><div class="equip-health" style="color:var(--success)">94%</div></div>
+              <div class="equip-card"><div class="equip-status warning"></div><div><div class="equip-name">Haul Truck HT-22</div><div class="equip-meta">Elevated vibration</div></div><div class="equip-health" style="color:var(--warning)">71%</div></div>
+              <div class="equip-card"><div class="equip-status critical"></div><div><div class="equip-name">Conveyor CV-12</div><div class="equip-meta">Thermal spike</div></div><div class="equip-health" style="color:var(--danger)">42%</div></div>
             </div>
           </div>
-
           <div>
             <div class="panel-label">Geotechnical Risk Map</div>
-            <div class="risk-map">
-              <div class="risk-map-grid" id="riskGrid"></div>
-            </div>
-            <div class="risk-legend">
-              <span><i style="background:rgba(34,197,94,0.5)"></i> Low</span>
-              <span><i style="background:rgba(234,179,8,0.6)"></i> Medium</span>
-              <span><i style="background:rgba(239,68,68,0.6)"></i> High</span>
-            </div>
+            <div class="risk-map"><div class="risk-map-grid" id="riskGrid"></div></div>
           </div>
         </div>
-
-        <!-- Right: Alerts -->
         <div class="demo-panel">
           <div>
             <div class="panel-label">Alert Feed</div>
-            <div class="alert-feed" id="alertFeed">
-              <div class="alert-item warning">
-                <div>
-                  <div class="alert-text">Elevated vibration detected on HT-22</div>
-                  <div class="alert-time">2 min ago</div>
-                </div>
-              </div>
-              <div class="alert-item critical">
-                <div>
-                  <div class="alert-text">Thermal anomaly · Conveyor CV-12</div>
-                  <div class="alert-time">7 min ago</div>
-                </div>
-              </div>
-              <div class="alert-item info">
-                <div>
-                  <div class="alert-text">Seismic cluster resolved · North Face</div>
-                  <div class="alert-time">18 min ago</div>
-                </div>
-              </div>
-              <div class="alert-item info">
-                <div>
-                  <div class="alert-text">Ventilation set-point adjusted</div>
-                  <div class="alert-time">31 min ago</div>
-                </div>
-              </div>
+            <div id="alertFeed">
+              <div class="alert-item warning"><div><div>Elevated vibration on HT-22</div><div class="alert-time">2 min ago</div></div></div>
+              <div class="alert-item critical"><div><div>Thermal anomaly · CV-12</div><div class="alert-time">7 min ago</div></div></div>
+              <div class="alert-item info"><div><div>Seismic cluster resolved</div><div class="alert-time">18 min ago</div></div></div>
             </div>
           </div>
-
-          <div style="margin-top:auto">
-            <div class="panel-label">Prediction Window</div>
-            <div style="background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.15);border-radius:12px;padding:1rem;">
-              <div style="font-size:0.9rem;font-weight:600;margin-bottom:0.4rem;">Next 6–12 hours</div>
-              <div style="font-size:0.82rem;color:var(--text-muted);line-height:1.5;">
-                Moderate risk of increased micro-seismic activity in North Face sector B. Recommend reduced blast intensity and additional monitoring.
-              </div>
-            </div>
+          <div style="margin-top:auto;background:rgba(34,211,238,0.06);border:1px solid rgba(34,211,238,0.15);border-radius:10px;padding:0.9rem">
+            <div style="font-size:0.85rem;font-weight:600;margin-bottom:0.3rem">Next 6–12 hrs</div>
+            <div style="font-size:0.78rem;color:var(--text-muted)">Moderate micro-seismic risk in North Face sector B. Recommend reduced blast intensity.</div>
           </div>
         </div>
       </div>
-
-      <!-- Footer / Scenarios -->
       <div class="demo-footer">
-        <div class="scenario-label">Run Scenario Simulation</div>
-        <div class="scenario-btns">
-          <button class="scenario-btn" data-scenario="blast">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            Blast Design
-          </button>
-          <button class="scenario-btn" data-scenario="vent">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
-            Ventilation
-          </button>
-          <button class="scenario-btn" data-scenario="load">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-            Haul Load
-          </button>
+        <div style="font-size:0.85rem;color:var(--text-muted)">Run Scenario</div>
+        <div style="display:flex;gap:0.45rem;flex-wrap:wrap">
+          <button class="scenario-btn" data-sc="blast">Blast Design</button>
+          <button class="scenario-btn" data-sc="vent">Ventilation</button>
+          <button class="scenario-btn" data-sc="load">Haul Load</button>
         </div>
-        <div class="demo-note">Simulated environment · Not connected to live mine data</div>
+        <div style="font-size:0.75rem;color:var(--text-muted);opacity:0.7">Simulated environment</div>
       </div>
     </div>
   </div>
 
-  <!-- APPROACH -->
-  <section id="approach">
+  <!-- 3D TWIN -->
+  <section id="3d">
     <div class="section-header reveal">
-      <div class="section-label">Technical Approach</div>
-      <h2 class="section-title">How the Platform Operates</h2>
-      <p class="section-desc">
-        A hybrid architecture that combines real-time data, physics-informed models,
-        and practical operational interfaces.
-      </p>
+      <div class="section-label">3D Visualisation</div>
+      <h2 class="section-title">Interactive Digital Twin Viewer</h2>
+      <p class="section-desc">A lightweight Three.js representation of a mine digital twin. Drag to orbit · scroll to zoom.</p>
     </div>
-    <div class="steps">
-      <div class="step reveal reveal-delay-1">
-        <div class="step-num">1</div>
-        <h4>Data Acquisition</h4>
-        <p>Sensors, equipment systems and existing control networks continuously feed operational data.</p>
-      </div>
-      <div class="step reveal reveal-delay-2">
-        <div class="step-num">2</div>
-        <h4>Digital Representation</h4>
-        <p>A high-fidelity virtual model of the mine is kept synchronised with live conditions.</p>
-      </div>
-      <div class="step reveal reveal-delay-3">
-        <div class="step-num">3</div>
-        <h4>Intelligent Analysis</h4>
-        <p>Physics-informed models evaluate both data patterns and underlying physical behaviour.</p>
-      </div>
-      <div class="step reveal">
-        <div class="step-num">4</div>
-        <h4>Actionable Output</h4>
-        <p>Insights and alerts are delivered through dashboards and integrated operational workflows.</p>
+    <div class="reveal" style="position:relative">
+      <div id="twin3d"></div>
+      <div class="twin3d-overlay">
+        <strong>MineMirror Twin</strong><br>Open-pit schematic · live sensor overlay
       </div>
     </div>
   </section>
 
-  <!-- IMPACT / STATS -->
+  <!-- VIDEO LIBRARY -->
+  <section id="videos">
+    <div class="section-header reveal">
+      <div class="section-label">Video Library</div>
+      <h2 class="section-title">Digital Twin in Mining — Live Learning</h2>
+      <p class="section-desc">Curated industry videos that show real applications of digital twins across open-pit and underground operations.</p>
+    </div>
+    <div class="video-grid">
+      <div class="video-card reveal reveal-delay-1">
+        <div class="video-thumb">
+          <iframe src="https://www.youtube.com/embed/HF9WjqXN54o?rel=0" title="Mining Digital Twins" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="video-info">
+          <h4>Mining Digital Twins</h4>
+          <p>MOSIMTEC — How simulation and digital twins optimise pit-to-port operations.</p>
+        </div>
+      </div>
+      <div class="video-card reveal reveal-delay-2">
+        <div class="video-thumb">
+          <iframe src="https://www.youtube.com/embed/ay_5Zzhk8NM?rel=0" title="Virtual Experience Twin" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="video-info">
+          <h4>Virtual Experience Twin</h4>
+          <p>Dassault Systèmes — Spatial digital twin bringing remote mining operations to life.</p>
+        </div>
+      </div>
+      <div class="video-card reveal reveal-delay-3">
+        <div class="video-thumb">
+          <iframe src="https://www.youtube.com/embed/4f92NUKJDDU?rel=0" title="3D & Digital Twins for Mining" allowfullscreen loading="lazy"></iframe>
+        </div>
+        <div class="video-info">
+          <h4>3D Animation & Digital Twins</h4>
+          <p>Industrial 3D, VR and digital-twin visualisations for the mining industry.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLLABORATE -->
+  <section id="collaborate">
+    <div class="section-header reveal">
+      <div class="section-label">Join the Mission</div>
+      <h2 class="section-title">Work With MineMirror AI</h2>
+      <p class="section-desc">Whether you are an engineer, researcher, student, operator or investor — there is a place to contribute and grow together.</p>
+    </div>
+    <div class="collab-grid">
+      <div class="collab-card reveal reveal-delay-1">
+        <h3>Engineers & Technologists</h3>
+        <p>Help build physics-informed models, real-time data pipelines, edge-cloud architectures and operator interfaces that make mines safer.</p>
+        <div class="collab-tags">
+          <span class="tag">Digital Twin</span>
+          <span class="tag">ML / PINNs</span>
+          <span class="tag">IoT & Edge</span>
+          <span class="tag">3D Visualisation</span>
+        </div>
+        <a href="mailto:lup89662@gmail.com?subject=Engineer Collaboration – MineMirror AI" class="collab-cta">Start a technical conversation →</a>
+      </div>
+      <div class="collab-card reveal reveal-delay-2">
+        <h3>Researchers & Academics</h3>
+        <p>Collaborate on geotechnical risk prediction, remaining-useful-life models, multi-physics simulation and validation studies with real operational context.</p>
+        <div class="collab-tags">
+          <span class="tag">Geomechanics</span>
+          <span class="tag">Physics-Informed ML</span>
+          <span class="tag">Joint Papers</span>
+          <span class="tag">Open Research</span>
+        </div>
+        <a href="mailto:lup89662@gmail.com?subject=Research Collaboration – MineMirror AI" class="collab-cta">Propose a research direction →</a>
+      </div>
+      <div class="collab-card reveal reveal-delay-1">
+        <h3>Mining Companies & Operators</h3>
+        <p>Pilot MineMirror on a single zone or critical asset class. We design the integration path around your existing sensors and control systems.</p>
+        <div class="collab-tags">
+          <span class="tag">Pilot Projects</span>
+          <span class="tag">Safety ROI</span>
+          <span class="tag">Integration</span>
+          <span class="tag">Training</span>
+        </div>
+        <a href="mailto:lup89662@gmail.com?subject=Pilot Discussion – MineMirror AI" class="collab-cta">Discuss a pilot →</a>
+      </div>
+      <div class="collab-card reveal reveal-delay-2">
+        <h3>Students & Early-Career Talent</h3>
+        <p>Looking for meaningful projects in digital twins, mining technology or applied AI? Reach out with your background and interests — mentorship and real problems available.</p>
+        <div class="collab-tags">
+          <span class="tag">Internships</span>
+          <span class="tag">Capstone</span>
+          <span class="tag">Mentorship</span>
+          <span class="tag">Open Problems</span>
+        </div>
+        <a href="mailto:lup89662@gmail.com?subject=Student / Early Career – MineMirror AI" class="collab-cta">Introduce yourself →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- IMPACT -->
   <section>
     <div class="section-header reveal">
       <div class="section-label">Expected Outcomes</div>
       <h2 class="section-title">Measurable Operational Impact</h2>
     </div>
     <div class="stats">
-      <div class="stat-card reveal reveal-delay-1">
-        <div class="stat-number" data-target="40" data-prefix="" data-suffix="%">0%</div>
-        <div class="stat-label">Reduction in unplanned downtime</div>
-      </div>
-      <div class="stat-card reveal reveal-delay-2">
-        <div class="stat-number" data-target="12" data-prefix="" data-suffix=" hrs">0</div>
-        <div class="stat-label">Early warning lead time</div>
-      </div>
-      <div class="stat-card reveal reveal-delay-3">
-        <div class="stat-number" data-target="30" data-prefix="" data-suffix="%">0%</div>
-        <div class="stat-label">Lower maintenance costs</div>
-      </div>
-      <div class="stat-card reveal">
-        <div class="stat-number">Improved</div>
-        <div class="stat-label">Workforce exposure control</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TECHNOLOGY -->
-  <section id="tech">
-    <div class="section-header reveal">
-      <div class="section-label">Technology Foundation</div>
-      <h2 class="section-title">Physics-Informed Intelligence</h2>
-      <p class="section-desc">
-        Combining domain physics with modern machine learning to deliver
-        reliable predictions even with limited failure data.
-      </p>
-    </div>
-    <div class="tech-grid">
-      <div class="tech-item reveal reveal-delay-1">
-        <div class="tech-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        </div>
-        <div>
-          <h4>Physics-Informed Models</h4>
-          <p>Embed governing equations of rock mechanics, fluid flow and thermodynamics into the learning process.</p>
-        </div>
-      </div>
-      <div class="tech-item reveal reveal-delay-2">
-        <div class="tech-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-        </div>
-        <div>
-          <h4>Real-Time Digital Twin</h4>
-          <p>Live synchronisation between physical assets, sensors and the virtual environment.</p>
-        </div>
-      </div>
-      <div class="tech-item reveal reveal-delay-3">
-        <div class="tech-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-        </div>
-        <div>
-          <h4>Predictive Analytics</h4>
-          <p>Remaining useful life estimation and anomaly detection for critical equipment.</p>
-        </div>
-      </div>
-      <div class="tech-item reveal reveal-delay-1">
-        <div class="tech-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        </div>
-        <div>
-          <h4>Edge + Cloud Hybrid</h4>
-          <p>Low-latency edge processing combined with cloud-scale model training and storage.</p>
-        </div>
-      </div>
-      <div class="tech-item reveal reveal-delay-2">
-        <div class="tech-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div>
-          <h4>Safety-First Alerts</h4>
-          <p>Prioritised, explainable alerts designed for control-room and field decision making.</p>
-        </div>
-      </div>
-      <div class="tech-item reveal reveal-delay-3">
-        <div class="tech-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
-        </div>
-        <div>
-          <h4>Scenario Simulation</h4>
-          <p>What-if analysis for blast design, ventilation and operational changes before deployment.</p>
-        </div>
-      </div>
+      <div class="stat-card reveal"><div class="stat-number" data-target="40" data-suffix="%">0%</div><div class="stat-label">Reduction in unplanned downtime</div></div>
+      <div class="stat-card reveal reveal-delay-1"><div class="stat-number" data-target="12" data-suffix=" hrs">0</div><div class="stat-label">Early warning lead time</div></div>
+      <div class="stat-card reveal reveal-delay-2"><div class="stat-number" data-target="30" data-suffix="%">0%</div><div class="stat-label">Lower maintenance costs</div></div>
+      <div class="stat-card reveal reveal-delay-3"><div class="stat-number">Improved</div><div class="stat-label">Workforce exposure control</div></div>
     </div>
   </section>
 
@@ -1556,14 +862,17 @@
       <h2 class="section-title">Founder</h2>
     </div>
     <div class="founder-card reveal">
-      <div class="founder-avatar">NK</div>
+      <div class="founder-avatar">
+        <img src="assets/founder.jpg" alt="Nitish Kumar Roy – Founder of MineMirror AI" />
+      </div>
       <div class="founder-info">
         <h3>Nitish Kumar Roy</h3>
         <div class="founder-role">Founder & Innovator</div>
         <p>
-          Independent innovator focused on applying Digital Twin and physics-informed
-          intelligence to improve safety, reliability and sustainability in mining operations.
-          Based in  India.
+          Independent innovator focused on applying Digital Twin and physics-informed 
+          intelligence to improve safety, reliability and sustainability in mining operations. 
+          Based in Nagaon, Assam, India. Open to collaboration with engineers, researchers, 
+          operators and partners worldwide.
         </p>
       </div>
     </div>
@@ -1573,14 +882,11 @@
   <section id="contact">
     <div class="section-header reveal">
       <div class="section-label">Engage</div>
-      <h2 class="section-title">Start a Conversation</h2>
+      <h2 class="section-title">Let’s Build Together</h2>
     </div>
     <div class="contact-box reveal">
-      <h3>Interested in MineMirror AI?</h3>
-      <p>
-        Reach out to discuss technical details, pilot opportunities,
-        or potential collaboration.
-      </p>
+      <h3>Ready to collaborate or pilot?</h3>
+      <p>Reach out for technical discussions, pilot opportunities, research partnerships or career conversations.</p>
       <a href="mailto:lup89662@gmail.com" class="email-btn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
         lup89662@gmail.com
@@ -1588,310 +894,237 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer>
-    <a href="#" class="logo">
-      Mine<span>Mirror</span> AI
-      <span class="logo-dot"></span>
-    </a>
-    <p class="footer-tagline">Physics-Informed Digital Twin for Mining Excellence</p>
-    <p class="footer-copy">© 2026 Nitish Kumar Roy. All rights reserved.</p>
+    <a href="#" class="logo">Mine<span>Mirror</span> AI <span class="logo-dot"></span></a>
+    <p>Physics-Informed Digital Twin for Mining Excellence</p>
+    <p style="margin-top:0.9rem;opacity:0.55;font-size:0.82rem">© 2026 Nitish Kumar Roy. All rights reserved.</p>
   </footer>
 
   <script>
-    // ========== NAVBAR SCROLL ==========
+    // NAV
     const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 40);
-    }, { passive: true });
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 40), {passive:true});
 
-    // ========== MOBILE MENU ==========
+    // MOBILE
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobileMenu');
     const mobileOverlay = document.getElementById('mobileOverlay');
-
     function toggleMenu() {
-      const isOpen = mobileMenu.classList.toggle('open');
-      hamburger.classList.toggle('active', isOpen);
-      mobileOverlay.classList.toggle('visible', isOpen);
-      document.body.style.overflow = isOpen ? 'hidden' : '';
+      const open = mobileMenu.classList.toggle('open');
+      hamburger.classList.toggle('active', open);
+      mobileOverlay.classList.toggle('visible', open);
+      document.body.style.overflow = open ? 'hidden' : '';
     }
-
     hamburger.addEventListener('click', toggleMenu);
     mobileOverlay.addEventListener('click', toggleMenu);
-    mobileMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        if (mobileMenu.classList.contains('open')) toggleMenu();
-      });
-    });
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { if(mobileMenu.classList.contains('open')) toggleMenu(); }));
 
-    // ========== REVEAL ON SCROLL ==========
-    const revealEls = document.querySelectorAll('.reveal');
+    // REVEAL
     const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          revealObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    revealEls.forEach(el => revealObserver.observe(el));
+      entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); revealObserver.unobserve(e.target); }});
+    }, {threshold:0.12, rootMargin:'0px 0px -30px 0px'});
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // ========== ANIMATED COUNTERS ==========
-    const counters = document.querySelectorAll('.stat-number[data-target]');
+    // COUNTERS
     const counterObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const el = entry.target;
-          const target = +el.dataset.target;
-          const prefix = el.dataset.prefix || '';
-          const suffix = el.dataset.suffix || '';
-          const duration = 1800;
-          const start = performance.now();
-          function update(now) {
-            const progress = Math.min((now - start) / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            const current = Math.floor(eased * target);
-            el.textContent = prefix + current + suffix;
-            if (progress < 1) requestAnimationFrame(update);
-            else el.textContent = prefix + target + suffix;
-          }
-          requestAnimationFrame(update);
-          counterObserver.unobserve(el);
+        if(!entry.isIntersecting) return;
+        const el = entry.target;
+        const target = +el.dataset.target;
+        const suffix = el.dataset.suffix || '';
+        const start = performance.now();
+        function tick(now) {
+          const p = Math.min((now-start)/1600,1);
+          const eased = 1 - Math.pow(1-p,3);
+          el.textContent = Math.floor(eased*target) + suffix;
+          if(p<1) requestAnimationFrame(tick); else el.textContent = target + suffix;
         }
+        requestAnimationFrame(tick);
+        counterObserver.unobserve(el);
       });
-    }, { threshold: 0.5 });
-    counters.forEach(c => counterObserver.observe(c));
+    }, {threshold:0.5});
+    document.querySelectorAll('.stat-number[data-target]').forEach(c => counterObserver.observe(c));
 
-    // ========== PARTICLE CANVAS ==========
+    // PARTICLES
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
-    let particles = [];
-    let animationId;
-    let width, height;
-
-    function resize() {
-      width = canvas.width = canvas.offsetWidth;
-      height = canvas.height = canvas.offsetHeight;
+    let particles=[], w, h, animId;
+    function resize(){ w=canvas.width=canvas.offsetWidth; h=canvas.height=canvas.offsetHeight; }
+    function create(){
+      particles=[];
+      const n = Math.min(50, Math.floor(w*h/18000));
+      for(let i=0;i<n;i++) particles.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*1.5+0.4,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,a:Math.random()*0.35+0.15});
     }
-    function createParticles() {
-      particles = [];
-      const count = Math.min(55, Math.floor(width * height / 18000));
-      for (let i = 0; i < count; i++) {
-        particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          r: Math.random() * 1.6 + 0.4,
-          vx: (Math.random() - 0.5) * 0.35,
-          vy: (Math.random() - 0.5) * 0.35,
-          alpha: Math.random() * 0.4 + 0.15
-        });
-      }
-    }
-    function draw() {
-      ctx.clearRect(0, 0, width, height);
-      particles.forEach((p, i) => {
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(34, 211, 238, ${p.alpha})`;
-        ctx.fill();
-        for (let j = i + 1; j < particles.length; j++) {
-          const q = particles[j];
-          const dx = p.x - q.x, dy = p.y - q.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 110) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(q.x, q.y);
-            ctx.strokeStyle = `rgba(34, 211, 238, ${0.08 * (1 - dist / 110)})`;
-            ctx.lineWidth = 0.6;
-            ctx.stroke();
-          }
+    function draw(){
+      ctx.clearRect(0,0,w,h);
+      particles.forEach((p,i)=>{
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0||p.x>w) p.vx*=-1; if(p.y<0||p.y>h) p.vy*=-1;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(34,211,238,${p.a})`; ctx.fill();
+        for(let j=i+1;j<particles.length;j++){
+          const q=particles[j], dx=p.x-q.x, dy=p.y-q.y, d=Math.sqrt(dx*dx+dy*dy);
+          if(d<100){ ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y);
+            ctx.strokeStyle=`rgba(34,211,238,${0.07*(1-d/100)})`; ctx.lineWidth=0.6; ctx.stroke(); }
         }
       });
-      animationId = requestAnimationFrame(draw);
+      animId=requestAnimationFrame(draw);
     }
-    function initParticles() {
-      resize(); createParticles();
-      if (animationId) cancelAnimationFrame(animationId);
-      draw();
+    if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){ resize(); create(); draw(); }
+    window.addEventListener('resize',()=>{ resize(); create(); });
+
+    // DEMO LOGIC
+    const circ = 2*Math.PI*15.5;
+    function setGauge(id, val, color){
+      const c = document.getElementById(id);
+      const v = document.getElementById('v'+id.slice(1));
+      if(!c) return;
+      c.style.strokeDashoffset = circ - (val/100)*circ;
+      if(color) c.style.stroke = color;
+      if(v) v.textContent = Math.round(val)+'%';
     }
-    window.addEventListener('resize', () => { resize(); createParticles(); });
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      initParticles();
-    }
+    setGauge('gSafety',79); setGauge('gUptime',88,'#22c55e');
 
-    // ========== LIVE DEMO LOGIC ==========
-    const circumference = 2 * Math.PI * 15.5; // ~97.4
-
-    function setGauge(id, value, color) {
-      const circle = document.getElementById(id);
-      const valEl = document.getElementById('val' + id.replace('gauge', ''));
-      if (!circle) return;
-      const offset = circumference - (value / 100) * circumference;
-      circle.style.strokeDashoffset = offset;
-      if (color) circle.style.stroke = color;
-      if (valEl) valEl.textContent = Math.round(value) + '%';
-    }
-
-    // Initialize gauges
-    setGauge('gaugeSafety', 79);
-    setGauge('gaugeUptime', 88, '#22c55e');
-
-    // Risk map
     const riskGrid = document.getElementById('riskGrid');
-    function generateRiskMap(intensity = 0.3) {
-      riskGrid.innerHTML = '';
-      for (let i = 0; i < 30; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'risk-cell';
-        const r = Math.random();
-        if (r < intensity * 0.25) cell.classList.add('high');
-        else if (r < intensity * 0.55) cell.classList.add('med');
-        else if (r < intensity * 0.9) cell.classList.add('low');
+    function genRisk(intensity=0.35){
+      riskGrid.innerHTML='';
+      for(let i=0;i<24;i++){
+        const cell=document.createElement('div'); cell.className='risk-cell';
+        const r=Math.random();
+        if(r<intensity*0.25) cell.classList.add('high');
+        else if(r<intensity*0.55) cell.classList.add('med');
+        else if(r<intensity*0.9) cell.classList.add('low');
         riskGrid.appendChild(cell);
       }
     }
-    generateRiskMap(0.35);
+    genRisk();
 
-    // Live metric updates
-    const metrics = {
-      seismic: { el: document.getElementById('mSeismic'), base: 3, range: ' / hr' },
-      vib: { el: document.getElementById('mVib'), base: 2.4, unit: ' mm/s', decimals: 1 },
-      dust: { el: document.getElementById('mDust'), base: 1.8, unit: ' mg/m³', decimals: 1 },
-      air: { el: document.getElementById('mAir'), base: 1.2, unit: ' m/s', decimals: 1 },
-      temp: { el: document.getElementById('mTemp'), base: 28.4, unit: ' °C', decimals: 1 }
-    };
+    setInterval(()=>{
+      setGauge('gSafety', 74+Math.random()*14);
+      setGauge('gUptime', 83+Math.random()*12, Math.random()>0.3?'#22c55e':'#eab308');
+      document.getElementById('mSeismic').textContent = (2+Math.floor(Math.random()*4))+' / hr';
+      document.getElementById('mVib').textContent = (1.8+Math.random()*1.2).toFixed(1)+' mm/s';
+      document.getElementById('mDust').textContent = (1.2+Math.random()*1.1).toFixed(1)+' mg/m³';
+      document.getElementById('mAir').textContent = (0.9+Math.random()*0.6).toFixed(1)+' m/s';
+    }, 3000);
 
-    function updateMetrics() {
-      Object.values(metrics).forEach(m => {
-        if (!m.el) return;
-        const delta = (Math.random() - 0.5) * 0.3;
-        const val = Math.max(0, m.base + delta);
-        m.base = val;
-        m.el.textContent = (m.decimals ? val.toFixed(m.decimals) : Math.round(val)) + m.unit;
-      });
-      // slight gauge drift
-      const safety = 75 + Math.random() * 12;
-      const uptime = 84 + Math.random() * 10;
-      setGauge('gaugeSafety', safety);
-      setGauge('gaugeUptime', uptime, uptime > 85 ? '#22c55e' : '#eab308');
-    }
-    setInterval(updateMetrics, 3200);
-
-    // Zone switching
-    document.querySelectorAll('.zone-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.zone-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.zone-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('.zone-btn').forEach(b=>b.classList.remove('active'));
         btn.classList.add('active');
-        const zone = btn.dataset.zone;
-        const intensity = zone === 'north' ? 0.45 : zone === 'central' ? 0.3 : 0.55;
-        generateRiskMap(intensity);
-        // push a new alert
-        addAlert(
-          zone === 'south' ? 'warning' : 'info',
-          `Switched to ${btn.textContent} zone · risk model refreshed`
-        );
+        const z=btn.dataset.zone;
+        genRisk(z==='north'?0.45:z==='central'?0.3:0.55);
+      });
+    });
+    document.querySelectorAll('.scenario-btn').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('.scenario-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const sc=btn.dataset.sc;
+        if(sc==='blast'){ genRisk(0.7); setGauge('gSafety',58); }
+        else if(sc==='vent'){ genRisk(0.22); setGauge('gSafety',87); }
+        else { setGauge('gUptime',74,'#eab308'); }
+        setTimeout(()=>btn.classList.remove('active'),3500);
       });
     });
 
-    // Scenario buttons
-    document.querySelectorAll('.scenario-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const sc = btn.dataset.scenario;
-        if (sc === 'blast') {
-          generateRiskMap(0.7);
-          setGauge('gaugeSafety', 61);
-          addAlert('critical', 'Blast scenario: elevated seismic risk predicted in sector B');
-          addAlert('warning', 'Recommend reducing charge density by 15–20%');
-        } else if (sc === 'vent') {
-          generateRiskMap(0.25);
-          setGauge('gaugeSafety', 86);
-          metrics.dust.base = 1.1;
-          metrics.air.base = 1.6;
-          updateMetrics();
-          addAlert('info', 'Ventilation scenario: improved airflow · dust levels declining');
-        } else if (sc === 'load') {
-          setGauge('gaugeUptime', 76, '#eab308');
-          addAlert('warning', 'Increased haul load: HT-22 health projected to drop 8% in 4 hrs');
-        }
-        setTimeout(() => btn.classList.remove('active'), 4000);
+    // THREE.JS 3D TWIN
+    (function(){
+      const container = document.getElementById('twin3d');
+      if(!container || !window.THREE) return;
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x0a0f1a);
+      scene.fog = new THREE.Fog(0x0a0f1a, 40, 120);
+
+      const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 200);
+      camera.position.set(28, 22, 28);
+
+      const renderer = new THREE.WebGLRenderer({antialias:true});
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+      container.appendChild(renderer.domElement);
+
+      scene.add(new THREE.AmbientLight(0x334455, 0.6));
+      const dir = new THREE.DirectionalLight(0x22d3ee, 0.9);
+      dir.position.set(20,30,15); scene.add(dir);
+      const point = new THREE.PointLight(0xf97316, 0.5, 60);
+      point.position.set(-10,15,-10); scene.add(point);
+
+      const groundGeo = new THREE.PlaneGeometry(60,60,20,20);
+      const groundMat = new THREE.MeshStandardMaterial({color:0x1a2332, roughness:0.9, metalness:0.1});
+      const ground = new THREE.Mesh(groundGeo, groundMat);
+      ground.rotation.x = -Math.PI/2; scene.add(ground);
+
+      const pitGroup = new THREE.Group();
+      const levels = [
+        {size:22, y:0.4, color:0x2a3548},
+        {size:17, y:1.6, color:0x243040},
+        {size:12, y:2.8, color:0x1e2a38},
+        {size:7,  y:4.0, color:0x182230}
+      ];
+      levels.forEach(l=>{
+        const geo = new THREE.BoxGeometry(l.size, 1.1, l.size);
+        const mat = new THREE.MeshStandardMaterial({color:l.color, roughness:0.85});
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.y = l.y; pitGroup.add(mesh);
       });
-    });
+      scene.add(pitGroup);
 
-    // Alert feed
-    function addAlert(type, text) {
-      const feed = document.getElementById('alertFeed');
-      const item = document.createElement('div');
-      item.className = `alert-item ${type}`;
-      item.innerHTML = `<div><div class="alert-text">${text}</div><div class="alert-time">Just now</div></div>`;
-      feed.insertBefore(item, feed.firstChild);
-      if (feed.children.length > 6) feed.removeChild(feed.lastChild);
-    }
+      const sensors = [];
+      const sensorPositions = [[8,5.5,6], [-7,5.5,5], [5,4.2,-8], [-6,4.2,-7], [0,6.2,0], [10,3,-4]];
+      sensorPositions.forEach(pos=>{
+        const geo = new THREE.SphereGeometry(0.35, 16, 16);
+        const mat = new THREE.MeshStandardMaterial({color:0x22d3ee, emissive:0x22d3ee, emissiveIntensity:0.8, roughness:0.3});
+        const s = new THREE.Mesh(geo, mat);
+        s.position.set(...pos); scene.add(s); sensors.push(s);
+      });
 
-    // Mini trend chart
-    const trendCanvas = document.getElementById('trendChart');
-    if (trendCanvas) {
-      const tctx = trendCanvas.getContext('2d');
-      let trendData = Array.from({ length: 30 }, () => 40 + Math.random() * 40);
+      const roadMat = new THREE.LineBasicMaterial({color:0x22d3ee, transparent:true, opacity:0.35});
+      const roadPoints = [new THREE.Vector3(-18,0.15,12), new THREE.Vector3(-5,0.15,8), new THREE.Vector3(8,0.15,4), new THREE.Vector3(16,0.15,-6)];
+      const roadGeo = new THREE.BufferGeometry().setFromPoints(roadPoints);
+      scene.add(new THREE.Line(roadGeo, roadMat));
 
-      function drawTrend() {
-        const w = trendCanvas.width = trendCanvas.offsetWidth * 2;
-        const h = trendCanvas.height = trendCanvas.offsetHeight * 2;
-        tctx.scale(2, 2);
-        const cw = w / 2, ch = h / 2;
-        tctx.clearRect(0, 0, cw, ch);
-
-        // grid line
-        tctx.strokeStyle = 'rgba(255,255,255,0.04)';
-        tctx.beginPath();
-        tctx.moveTo(0, ch / 2);
-        tctx.lineTo(cw, ch / 2);
-        tctx.stroke();
-
-        // area
-        tctx.beginPath();
-        tctx.moveTo(0, ch);
-        trendData.forEach((v, i) => {
-          const x = (i / (trendData.length - 1)) * cw;
-          const y = ch - (v / 100) * ch;
-          tctx.lineTo(x, y);
-        });
-        tctx.lineTo(cw, ch);
-        tctx.closePath();
-        const grad = tctx.createLinearGradient(0, 0, 0, ch);
-        grad.addColorStop(0, 'rgba(34,211,238,0.25)');
-        grad.addColorStop(1, 'rgba(34,211,238,0)');
-        tctx.fillStyle = grad;
-        tctx.fill();
-
-        // line
-        tctx.beginPath();
-        trendData.forEach((v, i) => {
-          const x = (i / (trendData.length - 1)) * cw;
-          const y = ch - (v / 100) * ch;
-          if (i === 0) tctx.moveTo(x, y);
-          else tctx.lineTo(x, y);
-        });
-        tctx.strokeStyle = '#22d3ee';
-        tctx.lineWidth = 1.8;
-        tctx.stroke();
+      let isDragging=false, prevX=0, prevY=0;
+      let theta=0.7, phi=0.9, radius=42;
+      function updateCam(){
+        camera.position.x = radius * Math.sin(phi) * Math.cos(theta);
+        camera.position.y = radius * Math.cos(phi);
+        camera.position.z = radius * Math.sin(phi) * Math.sin(theta);
+        camera.lookAt(0,3,0);
       }
+      updateCam();
 
-      function updateTrend() {
-        trendData.shift();
-        trendData.push(35 + Math.random() * 50);
-        drawTrend();
+      renderer.domElement.addEventListener('mousedown', e=>{ isDragging=true; prevX=e.clientX; prevY=e.clientY; });
+      window.addEventListener('mouseup', ()=> isDragging=false);
+      window.addEventListener('mousemove', e=>{
+        if(!isDragging) return;
+        theta -= (e.clientX-prevX)*0.005;
+        phi = Math.max(0.2, Math.min(1.4, phi+(e.clientY-prevY)*0.005));
+        prevX=e.clientX; prevY=e.clientY; updateCam();
+      });
+      renderer.domElement.addEventListener('wheel', e=>{
+        e.preventDefault();
+        radius = Math.max(18, Math.min(70, radius + e.deltaY*0.04));
+        updateCam();
+      }, {passive:false});
+
+      function animate(){
+        requestAnimationFrame(animate);
+        sensors.forEach((s,i)=>{
+          s.material.emissiveIntensity = 0.5 + 0.5*Math.sin(Date.now()*0.003 + i);
+        });
+        pitGroup.rotation.y += 0.0008;
+        renderer.render(scene, camera);
       }
-      drawTrend();
-      setInterval(updateTrend, 2500);
-      window.addEventListener('resize', drawTrend);
-    }
+      animate();
+
+      window.addEventListener('resize', ()=>{
+        if(!container.clientWidth) return;
+        camera.aspect = container.clientWidth/container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      });
+    })();
   </script>
 </body>
 </html>
