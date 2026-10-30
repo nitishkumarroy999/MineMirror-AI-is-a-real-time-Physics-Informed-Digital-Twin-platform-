@@ -44,7 +44,6 @@
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: rgba(34,211,238,0.25); border-radius: 4px; }
 
-    /* NAV */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
       height: var(--nav-height);
@@ -123,7 +122,6 @@
     }
     .mobile-overlay.visible { opacity: 1; pointer-events: auto; }
 
-    /* HERO */
     .hero {
       min-height: 100vh; display: flex; align-items: center;
       padding: 8rem 2.5rem 5rem; position: relative; overflow: hidden;
@@ -220,7 +218,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* SECTIONS */
     section { padding: 6rem 2.5rem; max-width: 1200px; margin: 0 auto; }
     .section-header { text-align: center; margin-bottom: 3.5rem; }
     .section-label {
@@ -242,7 +239,6 @@
     .reveal-delay-2 { transition-delay: 0.2s; }
     .reveal-delay-3 { transition-delay: 0.3s; }
 
-    /* CARDS */
     .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.4rem; }
     .card {
       background: var(--bg-card); border: 1px solid var(--border);
@@ -269,7 +265,6 @@
     .card h3 { font-size: 1.12rem; font-weight: 600; margin-bottom: 0.55rem; }
     .card p { color: var(--text-muted); font-size: 0.94rem; }
 
-    /* HOW IT WORKS */
     .how-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;
     }
@@ -291,7 +286,6 @@
     }
     .video-wrap iframe { width: 100%; height: 100%; border: 0; }
 
-    /* 3D VIEWER */
     #twin3d {
       width: 100%; height: 420px; border-radius: var(--radius);
       border: 1px solid var(--border); background: #0a0f1a;
@@ -305,7 +299,6 @@
     }
     .twin3d-overlay strong { color: var(--primary); }
 
-    /* VIDEO LIBRARY */
     .video-grid {
       display: grid; grid-template-columns: repeat(3,1fr); gap: 1.4rem;
     }
@@ -322,7 +315,6 @@
     .video-info h4 { font-size: 0.98rem; margin-bottom: 0.3rem; }
     .video-info p { font-size: 0.85rem; color: var(--text-muted); }
 
-    /* DEMO */
     .demo-container {
       background: linear-gradient(160deg, rgba(15,23,42,0.9), rgba(2,6,23,0.95));
       border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden;
@@ -418,7 +410,6 @@
       background: rgba(34,211,238,0.12); border-color: var(--primary); color: var(--primary);
     }
 
-    /* COLLABORATE */
     .collab-grid {
       display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem;
     }
@@ -440,7 +431,6 @@
     }
     .collab-cta:hover { text-decoration: underline; }
 
-    /* STATS */
     .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.3rem; }
     .stat-card {
       background: var(--bg-card); border: 1px solid var(--border);
@@ -453,7 +443,6 @@
     }
     .stat-label { color: var(--text-muted); font-size: 0.88rem; }
 
-    /* FOUNDER */
     .founder-card {
       background: var(--bg-card); border: 1px solid var(--border);
       border-radius: var(--radius-lg); padding: 2.8rem;
@@ -465,6 +454,7 @@
       box-shadow: 0 12px 40px rgba(34, 211, 238, 0.25);
       border: 3px solid rgba(34, 211, 238, 0.35);
       position: relative; z-index: 1;
+      background: #0f172a;
     }
     .founder-avatar img {
       width: 100%; height: 100%;
@@ -475,7 +465,6 @@
     .founder-role { color: var(--primary); font-weight: 500; margin-bottom: 0.9rem; font-size: 0.95rem; }
     .founder-info p { color: var(--text-muted); font-size: 0.96rem; }
 
-    /* CONTACT */
     .contact-box {
       background: linear-gradient(145deg, rgba(34,211,238,0.07), rgba(249,115,22,0.04));
       border: 1px solid var(--border); border-radius: var(--radius-lg);
@@ -498,7 +487,6 @@
     footer .logo { display: inline-flex; margin-bottom: 0.9rem; }
     footer p { color: var(--text-muted); font-size: 0.88rem; }
 
-    /* RESPONSIVE */
     @media (max-width: 1100px) {
       .demo-body { grid-template-columns: 1fr 1fr; }
       .demo-panel:nth-child(3) { grid-column: 1/-1; border-right: none; border-top: 1px solid var(--border); }
@@ -520,7 +508,6 @@
   </style>
 </head>
 <body>
-  <!-- NAV -->
   <nav id="navbar">
     <a href="#" class="logo">Mine<span>Mirror</span> AI <span class="logo-dot"></span></a>
     <ul class="nav-links">
@@ -545,7 +532,6 @@
     <a href="#contact">Work With Me</a>
   </div>
 
-  <!-- HERO -->
   <header class="hero">
     <div class="hero-bg"></div>
     <canvas id="particles"></canvas>
@@ -575,7 +561,6 @@
     </div>
   </header>
 
-  <!-- OVERVIEW -->
   <section id="overview">
     <div class="section-header reveal">
       <div class="section-label">Platform Overview</div>
@@ -601,7 +586,6 @@
     </div>
   </section>
 
-  <!-- HOW DIGITAL TWIN WORKS -->
   <section id="how">
     <div class="section-header reveal">
       <div class="section-label">Education</div>
@@ -645,7 +629,6 @@
     </div>
   </section>
 
-  <!-- LIVE DEMO -->
   <section id="demo" style="padding-bottom:1rem">
     <div class="section-header reveal">
       <div class="section-label">Interactive</div>
@@ -733,7 +716,6 @@
     </div>
   </div>
 
-  <!-- 3D TWIN -->
   <section id="3d">
     <div class="section-header reveal">
       <div class="section-label">3D Visualisation</div>
@@ -748,7 +730,6 @@
     </div>
   </section>
 
-  <!-- VIDEO LIBRARY -->
   <section id="videos">
     <div class="section-header reveal">
       <div class="section-label">Video Library</div>
@@ -786,7 +767,6 @@
     </div>
   </section>
 
-  <!-- COLLABORATE -->
   <section id="collaborate">
     <div class="section-header reveal">
       <div class="section-label">Join the Mission</div>
@@ -841,7 +821,6 @@
     </div>
   </section>
 
-  <!-- IMPACT -->
   <section>
     <div class="section-header reveal">
       <div class="section-label">Expected Outcomes</div>
@@ -855,7 +834,7 @@
     </div>
   </section>
 
-  <!-- FOUNDER -->
+  <!-- ========== FOUNDER (CORRECTED) ========== -->
   <section id="founder">
     <div class="section-header reveal">
       <div class="section-label">Leadership</div>
@@ -863,7 +842,7 @@
     </div>
     <div class="founder-card reveal">
       <div class="founder-avatar">
-        <img src="founder.jpg" ...> alt="Nitish Kumar Roy – Founder of MineMirror AI" />
+        <img src="founder.jpg" alt="Nitish Kumar Roy – Founder of MineMirror AI" />
       </div>
       <div class="founder-info">
         <h3>Nitish Kumar Roy</h3>
@@ -878,7 +857,6 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
   <section id="contact">
     <div class="section-header reveal">
       <div class="section-label">Engage</div>
@@ -901,11 +879,9 @@
   </footer>
 
   <script>
-    // NAV
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 40), {passive:true});
 
-    // MOBILE
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobileMenu');
     const mobileOverlay = document.getElementById('mobileOverlay');
@@ -919,13 +895,11 @@
     mobileOverlay.addEventListener('click', toggleMenu);
     mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { if(mobileMenu.classList.contains('open')) toggleMenu(); }));
 
-    // REVEAL
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); revealObserver.unobserve(e.target); }});
     }, {threshold:0.12, rootMargin:'0px 0px -30px 0px'});
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // COUNTERS
     const counterObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if(!entry.isIntersecting) return;
@@ -945,10 +919,9 @@
     }, {threshold:0.5});
     document.querySelectorAll('.stat-number[data-target]').forEach(c => counterObserver.observe(c));
 
-    // PARTICLES
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
-    let particles=[], w, h, animId;
+    let particles=[], w, h;
     function resize(){ w=canvas.width=canvas.offsetWidth; h=canvas.height=canvas.offsetHeight; }
     function create(){
       particles=[];
@@ -968,12 +941,11 @@
             ctx.strokeStyle=`rgba(34,211,238,${0.07*(1-d/100)})`; ctx.lineWidth=0.6; ctx.stroke(); }
         }
       });
-      animId=requestAnimationFrame(draw);
+      requestAnimationFrame(draw);
     }
     if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){ resize(); create(); draw(); }
     window.addEventListener('resize',()=>{ resize(); create(); });
 
-    // DEMO LOGIC
     const circ = 2*Math.PI*15.5;
     function setGauge(id, val, color){
       const c = document.getElementById(id);
@@ -1028,64 +1000,37 @@
       });
     });
 
-    // THREE.JS 3D TWIN
     (function(){
       const container = document.getElementById('twin3d');
       if(!container || !window.THREE) return;
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0x0a0f1a);
       scene.fog = new THREE.Fog(0x0a0f1a, 40, 120);
-
       const camera = new THREE.PerspectiveCamera(45, container.clientWidth/container.clientHeight, 0.1, 200);
       camera.position.set(28, 22, 28);
-
       const renderer = new THREE.WebGLRenderer({antialias:true});
       renderer.setSize(container.clientWidth, container.clientHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
       container.appendChild(renderer.domElement);
-
       scene.add(new THREE.AmbientLight(0x334455, 0.6));
       const dir = new THREE.DirectionalLight(0x22d3ee, 0.9);
       dir.position.set(20,30,15); scene.add(dir);
       const point = new THREE.PointLight(0xf97316, 0.5, 60);
       point.position.set(-10,15,-10); scene.add(point);
-
-      const groundGeo = new THREE.PlaneGeometry(60,60,20,20);
-      const groundMat = new THREE.MeshStandardMaterial({color:0x1a2332, roughness:0.9, metalness:0.1});
-      const ground = new THREE.Mesh(groundGeo, groundMat);
+      const ground = new THREE.Mesh(new THREE.PlaneGeometry(60,60,20,20), new THREE.MeshStandardMaterial({color:0x1a2332, roughness:0.9}));
       ground.rotation.x = -Math.PI/2; scene.add(ground);
-
       const pitGroup = new THREE.Group();
-      const levels = [
-        {size:22, y:0.4, color:0x2a3548},
-        {size:17, y:1.6, color:0x243040},
-        {size:12, y:2.8, color:0x1e2a38},
-        {size:7,  y:4.0, color:0x182230}
-      ];
-      levels.forEach(l=>{
-        const geo = new THREE.BoxGeometry(l.size, 1.1, l.size);
-        const mat = new THREE.MeshStandardMaterial({color:l.color, roughness:0.85});
-        const mesh = new THREE.Mesh(geo, mat);
+      [{size:22,y:0.4,color:0x2a3548},{size:17,y:1.6,color:0x243040},{size:12,y:2.8,color:0x1e2a38},{size:7,y:4.0,color:0x182230}].forEach(l=>{
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(l.size,1.1,l.size), new THREE.MeshStandardMaterial({color:l.color, roughness:0.85}));
         mesh.position.y = l.y; pitGroup.add(mesh);
       });
       scene.add(pitGroup);
-
       const sensors = [];
-      const sensorPositions = [[8,5.5,6], [-7,5.5,5], [5,4.2,-8], [-6,4.2,-7], [0,6.2,0], [10,3,-4]];
-      sensorPositions.forEach(pos=>{
-        const geo = new THREE.SphereGeometry(0.35, 16, 16);
-        const mat = new THREE.MeshStandardMaterial({color:0x22d3ee, emissive:0x22d3ee, emissiveIntensity:0.8, roughness:0.3});
-        const s = new THREE.Mesh(geo, mat);
+      [[8,5.5,6],[-7,5.5,5],[5,4.2,-8],[-6,4.2,-7],[0,6.2,0],[10,3,-4]].forEach(pos=>{
+        const s = new THREE.Mesh(new THREE.SphereGeometry(0.35,16,16), new THREE.MeshStandardMaterial({color:0x22d3ee, emissive:0x22d3ee, emissiveIntensity:0.8}));
         s.position.set(...pos); scene.add(s); sensors.push(s);
       });
-
-      const roadMat = new THREE.LineBasicMaterial({color:0x22d3ee, transparent:true, opacity:0.35});
-      const roadPoints = [new THREE.Vector3(-18,0.15,12), new THREE.Vector3(-5,0.15,8), new THREE.Vector3(8,0.15,4), new THREE.Vector3(16,0.15,-6)];
-      const roadGeo = new THREE.BufferGeometry().setFromPoints(roadPoints);
-      scene.add(new THREE.Line(roadGeo, roadMat));
-
-      let isDragging=false, prevX=0, prevY=0;
-      let theta=0.7, phi=0.9, radius=42;
+      let isDragging=false, prevX=0, prevY=0, theta=0.7, phi=0.9, radius=42;
       function updateCam(){
         camera.position.x = radius * Math.sin(phi) * Math.cos(theta);
         camera.position.y = radius * Math.cos(phi);
@@ -1093,7 +1038,6 @@
         camera.lookAt(0,3,0);
       }
       updateCam();
-
       renderer.domElement.addEventListener('mousedown', e=>{ isDragging=true; prevX=e.clientX; prevY=e.clientY; });
       window.addEventListener('mouseup', ()=> isDragging=false);
       window.addEventListener('mousemove', e=>{
@@ -1107,17 +1051,13 @@
         radius = Math.max(18, Math.min(70, radius + e.deltaY*0.04));
         updateCam();
       }, {passive:false});
-
       function animate(){
         requestAnimationFrame(animate);
-        sensors.forEach((s,i)=>{
-          s.material.emissiveIntensity = 0.5 + 0.5*Math.sin(Date.now()*0.003 + i);
-        });
+        sensors.forEach((s,i)=>{ s.material.emissiveIntensity = 0.5 + 0.5*Math.sin(Date.now()*0.003 + i); });
         pitGroup.rotation.y += 0.0008;
         renderer.render(scene, camera);
       }
       animate();
-
       window.addEventListener('resize', ()=>{
         if(!container.clientWidth) return;
         camera.aspect = container.clientWidth/container.clientHeight;
