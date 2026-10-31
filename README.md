@@ -6,7 +6,7 @@ Official website of MineMirror AI — a digital twin platform focused on predict
 
 **Founder:** Nitish Kumar Roy  
 **Location:** India  
-**Contact:** lup89662@gmail.com
+**Contact:** 
 
 ---
 
