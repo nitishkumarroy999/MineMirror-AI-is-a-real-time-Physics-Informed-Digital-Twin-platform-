@@ -392,12 +392,397 @@
     footer .logo { display: inline-flex; margin-bottom: 0.8rem; }
     footer p { color: var(--text-muted); font-size: 0.9rem; }
 
+    /* ========== NEW: LIVE DIGITAL TWIN VISUALIZATION ========== */
+    .live-viz-section {
+      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+      color: #e2e8f0;
+      max-width: none;
+      padding: 5.5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .live-viz-section .section-label { color: var(--primary-light); }
+    .live-viz-section .section-title { color: #f8fafc; }
+    .live-viz-section .section-desc { color: #94a3b8; }
+
+    .viz-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    .twin-dashboard {
+      display: grid;
+      grid-template-columns: 1.7fr 1fr;
+      gap: 1.8rem;
+      margin-top: 2.5rem;
+    }
+
+    /* Main visualization panel */
+    .viz-main {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+    .viz-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.4rem;
+      background: rgba(15,23,42,0.9);
+      border-bottom: 1px solid #334155;
+    }
+    .viz-header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .viz-live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(22,163,74,0.15);
+      color: #4ade80;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.7rem;
+      border-radius: 100px;
+      border: 1px solid rgba(74,222,128,0.3);
+    }
+    .viz-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .viz-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .viz-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .viz-btn.active, .viz-btn:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* Mine map + heatmap */
+    .mine-map {
+      position: relative;
+      height: 420px;
+      background: 
+        radial-gradient(ellipse at 30% 40%, rgba(8,145,178,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 60%, rgba(249,115,22,0.08) 0%, transparent 45%),
+        linear-gradient(160deg, #0f172a 0%, #1e293b 100%);
+      overflow: hidden;
+    }
+
+    /* Grid lines */
+    .mine-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(148,163,184,0.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(148,163,184,0.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    /* Heatmap cells */
+    .heatmap-layer {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: repeat(8, 1fr);
+      opacity: 0.85;
+      pointer-events: none;
+    }
+    .heat-cell {
+      transition: background 0.6s ease;
+    }
+
+    /* Zone labels */
+    .zone-label {
+      position: absolute;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #94a3b8;
+      background: rgba(15,23,42,0.7);
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      pointer-events: none;
+    }
+
+    /* Worker markers */
+    .worker {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      cursor: pointer;
+    }
+    .worker-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #22d3ee, #0891b2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 3px rgba(34,211,238,0.35), 0 4px 12px rgba(0,0,0,0.4);
+      animation: worker-pulse 2.8s ease-in-out infinite;
+    }
+    .worker-icon svg {
+      width: 14px;
+      height: 14px;
+      color: #fff;
+    }
+    @keyframes worker-pulse {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(34,211,238,0.35), 0 4px 12px rgba(0,0,0,0.4); }
+      50% { box-shadow: 0 0 0 8px rgba(34,211,238,0.15), 0 4px 12px rgba(0,0,0,0.4); }
+    }
+    .worker-label {
+      position: absolute;
+      top: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15,23,42,0.9);
+      color: #e2e8f0;
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      border: 1px solid #334155;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+    .worker:hover .worker-label { opacity: 1; }
+
+    /* Alert hotspot */
+    .alert-hotspot {
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ef4444;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 0 rgba(239,68,68,0.5);
+      animation: alert-pulse 1.8s infinite;
+      transform: translate(-50%, -50%);
+      z-index: 8;
+    }
+    @keyframes alert-pulse {
+      0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
+      70% { box-shadow: 0 0 0 12px transparent; }
+      100% { box-shadow: 0 0 0 0 transparent; }
+    }
+
+    /* Equipment markers */
+    .equipment {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      background: #f97316;
+      border-radius: 4px;
+      border: 2px solid #fff;
+      transform: translate(-50%, -50%);
+      z-index: 7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .equipment svg { width: 12px; height: 12px; color: #fff; }
+
+    /* Side panel */
+    .viz-side {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .side-card {
+      background: rgba(30,41,59,0.8);
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 1.3rem;
+    }
+    .side-card h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .side-card h4 span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary-light);
+    }
+
+    /* Heatmap legend */
+    .heatmap-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .legend-bar {
+      height: 12px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #22c55e, #eab308, #f97316, #ef4444);
+    }
+    .legend-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7rem;
+      color: #94a3b8;
+    }
+
+    /* Worker list */
+    .worker-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .worker-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.55rem 0.7rem;
+      background: rgba(15,23,42,0.6);
+      border-radius: 10px;
+      border: 1px solid #334155;
+    }
+    .worker-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #22d3ee, #0891b2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .worker-info { flex: 1; min-width: 0; }
+    .worker-name { font-size: 0.82rem; font-weight: 600; color: #e2e8f0; }
+    .worker-zone { font-size: 0.72rem; color: #94a3b8; }
+    .worker-status {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.15rem 0.5rem;
+      border-radius: 100px;
+    }
+    .status-safe { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .status-warn { background: rgba(234,179,8,0.15); color: #facc15; }
+    .status-alert { background: rgba(239,68,68,0.15); color: #f87171; }
+
+    /* Risk metrics */
+    .risk-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.7rem;
+    }
+    .risk-item {
+      background: rgba(15,23,42,0.6);
+      border-radius: 10px;
+      padding: 0.7rem;
+      text-align: center;
+      border: 1px solid #334155;
+    }
+    .risk-val {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary-light);
+    }
+    .risk-label { font-size: 0.7rem; color: #94a3b8; margin-top: 0.15rem; }
+
+    /* Twin explanation cards under viz */
+    .twin-flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.2rem;
+      margin-top: 2.8rem;
+    }
+    .flow-step {
+      background: rgba(30,41,59,0.7);
+      border: 1px solid #334155;
+      border-radius: 14px;
+      padding: 1.4rem 1.2rem;
+      text-align: center;
+      position: relative;
+      transition: all 0.3s;
+    }
+    .flow-step:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(8,145,178,0.15);
+    }
+    .flow-num {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin: 0 auto 0.9rem;
+    }
+    .flow-step h5 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #f1f5f9;
+      margin-bottom: 0.4rem;
+    }
+    .flow-step p {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      line-height: 1.45;
+    }
+    .flow-arrow {
+      position: absolute;
+      right: -18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #475569;
+      font-size: 1.2rem;
+      z-index: 2;
+    }
+
     /* Responsive */
     @media (max-width: 1024px) {
-      .hero-content, .grid-3, .how-grid, .collab-grid, .stats {
+      .hero-content, .grid-3, .how-grid, .collab-grid, .stats, .twin-dashboard, .twin-flow {
         grid-template-columns: 1fr;
       }
       .hero-card { max-width: 420px; }
+      .flow-arrow { display: none; }
+      .mine-map { height: 340px; }
     }
     @media (max-width: 768px) {
       nav { padding: 0 1.3rem; }
@@ -406,6 +791,8 @@
       section { padding: 4rem 1.3rem; }
       .hero { padding: 7rem 1.3rem 4rem; }
       .founder-card { flex-direction: column; text-align: center; }
+      .viz-container { padding: 0 1.3rem; }
+      .mine-map { height: 280px; }
     }
   </style>
 </head>
@@ -416,7 +803,8 @@
     <ul class="nav-links">
       <li><a href="#overview">Overview</a></li>
       <li><a href="#how">How it Works</a></li>
-      <li><a href="#demo">Live Twin</a></li>
+      <li><a href="#live-viz">Live Twin</a></li>
+      <li><a href="#demo">Demo</a></li>
       <li><a href="#collaborate">Collaborate</a></li>
       <li><a href="#contact" class="nav-cta">Work With Me</a></li>
     </ul>
@@ -428,7 +816,8 @@
   <div class="mobile-menu" id="mobileMenu">
     <a href="#overview">Overview</a>
     <a href="#how">How it Works</a>
-    <a href="#demo">Live Twin</a>
+    <a href="#live-viz">Live Twin</a>
+    <a href="#demo">Demo</a>
     <a href="#collaborate">Collaborate</a>
     <a href="#contact">Work With Me</a>
   </div>
@@ -455,7 +844,7 @@
         </p>
         <div class="hero-buttons">
           <a href="#collaborate" class="btn btn-primary">Collaborate With Us</a>
-          <a href="#demo" class="btn btn-ghost">Explore Live Twin</a>
+          <a href="#live-viz" class="btn btn-ghost">Explore Live Twin</a>
         </div>
       </div>
 
@@ -514,6 +903,192 @@
         </div>
         <h3>Workforce Protection</h3>
         <p>Real-time tracking of environmental exposure to support healthier working conditions and regulatory compliance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== NEW LIVE DIGITAL TWIN VISUALIZATION ========== -->
+  <section id="live-viz" class="live-viz-section">
+    <div class="viz-container">
+      <div class="section-header reveal">
+        <div class="section-label">Live Digital Twin</div>
+        <h2 class="section-title">Real-Time Mine Visualization & Worker Safety</h2>
+        <p class="section-desc">Static demonstration of how MineMirror AI mirrors the physical mine — heatmaps, worker locations, equipment health and risk zones update continuously in the live system.</p>
+      </div>
+
+      <div class="twin-dashboard reveal">
+        <!-- Main Map + Heatmap -->
+        <div class="viz-main">
+          <div class="viz-header">
+            <div class="viz-header-left">
+              <span class="viz-live-badge"><span class="live-dot" style="width:7px;height:7px;"></span> LIVE</span>
+              <span class="viz-title">Open Pit Zone A — Digital Twin</span>
+            </div>
+            <div class="viz-controls">
+              <button class="viz-btn active" data-layer="stress">Stress</button>
+              <button class="viz-btn" data-layer="temp">Temp</button>
+              <button class="viz-btn" data-layer="risk">Risk</button>
+            </div>
+          </div>
+
+          <div class="mine-map" id="mineMap">
+            <div class="mine-grid"></div>
+            <div class="heatmap-layer" id="heatmapLayer"></div>
+
+            <!-- Zone labels -->
+            <div class="zone-label" style="top:12%; left:8%;">North Bench</div>
+            <div class="zone-label" style="top:18%; left:55%;">Haul Road</div>
+            <div class="zone-label" style="top:55%; left:12%;">Pit Floor</div>
+            <div class="zone-label" style="top:62%; left:68%;">South Wall</div>
+            <div class="zone-label" style="top:38%; left:38%;">Crusher Area</div>
+
+            <!-- Workers inspecting -->
+            <div class="worker" style="top:28%; left:22%;" title="Worker inspecting North Bench">
+              <div class="worker-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div class="worker-label">Ravi • Inspection</div>
+            </div>
+            <div class="worker" style="top:48%; left:42%;" title="Worker near crusher">
+              <div class="worker-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div class="worker-label">Priya • Monitoring</div>
+            </div>
+            <div class="worker" style="top:72%; left:75%;" title="Worker on South Wall">
+              <div class="worker-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div class="worker-label">Arjun • Survey</div>
+            </div>
+            <div class="worker" style="top:35%; left:78%;" title="Worker on haul road">
+              <div class="worker-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div class="worker-label">Meera • Safety</div>
+            </div>
+
+            <!-- Alert hotspot -->
+            <div class="alert-hotspot" style="top:58%; left:28%;" title="Elevated stress detected"></div>
+
+            <!-- Equipment markers -->
+            <div class="equipment" style="top:22%; left:62%;" title="Haul Truck HT-07">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <div class="equipment" style="top:65%; left:18%;" title="Excavator EX-03">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/></svg>
+            </div>
+            <div class="equipment" style="top:42%; left:55%;" title="Crusher Unit">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 12h.01"/><path d="M17 12h.01"/><path d="M7 12h.01"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Side panel -->
+        <div class="viz-side">
+          <div class="side-card">
+            <h4><span></span> Heatmap Legend</h4>
+            <div class="heatmap-legend">
+              <div class="legend-bar"></div>
+              <div class="legend-labels">
+                <span>Low</span>
+                <span>Moderate</span>
+                <span>High</span>
+                <span>Critical</span>
+              </div>
+            </div>
+            <p style="font-size:0.75rem;color:#94a3b8;margin-top:0.8rem;line-height:1.4;">
+              Colour intensity shows predicted stress / temperature / risk derived from physics-informed models.
+            </p>
+          </div>
+
+          <div class="side-card">
+            <h4><span></span> Workers On Site</h4>
+            <div class="worker-list">
+              <div class="worker-item">
+                <div class="worker-avatar">R</div>
+                <div class="worker-info">
+                  <div class="worker-name">Ravi Kumar</div>
+                  <div class="worker-zone">North Bench • Inspection</div>
+                </div>
+                <span class="worker-status status-safe">Safe</span>
+              </div>
+              <div class="worker-item">
+                <div class="worker-avatar">P</div>
+                <div class="worker-info">
+                  <div class="worker-name">Priya Sharma</div>
+                  <div class="worker-zone">Crusher Area • Monitoring</div>
+                </div>
+                <span class="worker-status status-safe">Safe</span>
+              </div>
+              <div class="worker-item">
+                <div class="worker-avatar">A</div>
+                <div class="worker-info">
+                  <div class="worker-name">Arjun Patel</div>
+                  <div class="worker-zone">South Wall • Survey</div>
+                </div>
+                <span class="worker-status status-warn">Caution</span>
+              </div>
+              <div class="worker-item">
+                <div class="worker-avatar">M</div>
+                <div class="worker-info">
+                  <div class="worker-name">Meera Singh</div>
+                  <div class="worker-zone">Haul Road • Safety Check</div>
+                </div>
+                <span class="worker-status status-safe">Safe</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="side-card">
+            <h4><span></span> Live Risk Snapshot</h4>
+            <div class="risk-grid">
+              <div class="risk-item">
+                <div class="risk-val">94%</div>
+                <div class="risk-label">Safety Index</div>
+              </div>
+              <div class="risk-item">
+                <div class="risk-val">2</div>
+                <div class="risk-label">Active Alerts</div>
+              </div>
+              <div class="risk-item">
+                <div class="risk-val">12h</div>
+                <div class="risk-label">Early Warning</div>
+              </div>
+              <div class="risk-item">
+                <div class="risk-val">4</div>
+                <div class="risk-label">Workers Live</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- How the twin works - visual flow -->
+      <div class="twin-flow reveal">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <h5>Sense</h5>
+          <p>Sensors, telemetry & surveys continuously feed the twin with live mine data.</p>
+          <span class="flow-arrow">→</span>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <h5>Model</h5>
+          <p>Physics + AI fusion creates accurate predictions even with limited failure data.</p>
+          <span class="flow-arrow">→</span>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <h5>Visualise</h5>
+          <p>Heatmaps, worker positions & equipment status appear in the living 3D twin.</p>
+          <span class="flow-arrow">→</span>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <h5>Act</h5>
+          <p>Operators receive clear alerts and recommended actions hours ahead of risk.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -747,6 +1322,99 @@
       });
     }, { threshold: 0.5 });
     document.querySelectorAll('.stat-number[data-target]').forEach(c => counterObserver.observe(c));
+
+    // ========== HEATMAP GENERATION (static demonstration) ==========
+    const heatmapLayer = document.getElementById('heatmapLayer');
+    const cols = 12;
+    const rows = 8;
+
+    // Pre-defined intensity patterns for different layers
+    const patterns = {
+      stress: [
+        0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.4,0.3,0.2,
+        0.15,0.2,0.3,0.4,0.55,0.65,0.7,0.6,0.5,0.4,0.3,0.2,
+        0.2,0.3,0.45,0.6,0.75,0.85,0.8,0.7,0.55,0.4,0.3,0.2,
+        0.25,0.4,0.55,0.7,0.85,0.95,0.9,0.75,0.6,0.45,0.3,0.2,
+        0.3,0.45,0.6,0.75,0.9,1.0,0.95,0.8,0.65,0.5,0.35,0.25,
+        0.35,0.5,0.65,0.8,0.9,0.95,0.85,0.7,0.55,0.4,0.3,0.2,
+        0.25,0.4,0.55,0.7,0.8,0.85,0.75,0.6,0.45,0.3,0.2,0.15,
+        0.15,0.25,0.35,0.45,0.55,0.6,0.5,0.4,0.3,0.2,0.15,0.1
+      ],
+      temp: [
+        0.2,0.25,0.3,0.35,0.4,0.45,0.5,0.55,0.6,0.5,0.4,0.3,
+        0.25,0.35,0.45,0.55,0.65,0.7,0.75,0.7,0.6,0.5,0.4,0.3,
+        0.3,0.4,0.5,0.65,0.75,0.85,0.9,0.8,0.7,0.55,0.4,0.3,
+        0.35,0.5,0.6,0.75,0.85,0.95,1.0,0.9,0.75,0.6,0.45,0.35,
+        0.3,0.45,0.55,0.7,0.8,0.9,0.95,0.85,0.7,0.55,0.4,0.3,
+        0.25,0.35,0.45,0.55,0.65,0.75,0.8,0.7,0.55,0.4,0.3,0.2,
+        0.2,0.3,0.4,0.5,0.55,0.6,0.55,0.45,0.35,0.25,0.2,0.15,
+        0.15,0.2,0.25,0.3,0.35,0.4,0.35,0.3,0.25,0.2,0.15,0.1
+      ],
+      risk: [
+        0.1,0.15,0.2,0.3,0.4,0.5,0.55,0.5,0.4,0.3,0.2,0.15,
+        0.15,0.25,0.35,0.5,0.65,0.8,0.85,0.75,0.6,0.45,0.3,0.2,
+        0.2,0.3,0.45,0.65,0.85,0.95,1.0,0.9,0.7,0.5,0.35,0.25,
+        0.25,0.4,0.55,0.75,0.9,1.0,0.95,0.8,0.65,0.45,0.3,0.2,
+        0.3,0.45,0.6,0.8,0.95,1.0,0.9,0.75,0.55,0.4,0.25,0.15,
+        0.2,0.35,0.5,0.7,0.85,0.9,0.8,0.65,0.45,0.3,0.2,0.1,
+        0.15,0.25,0.4,0.55,0.7,0.75,0.65,0.5,0.35,0.25,0.15,0.1,
+        0.1,0.15,0.25,0.35,0.45,0.5,0.4,0.3,0.2,0.15,0.1,0.05
+      ]
+    };
+
+    function getColor(intensity) {
+      // Green → Yellow → Orange → Red
+      if (intensity < 0.25) {
+        const t = intensity / 0.25;
+        return `rgba(34, 197, 94, ${0.15 + t * 0.35})`;
+      } else if (intensity < 0.5) {
+        const t = (intensity - 0.25) / 0.25;
+        return `rgba(234, 179, 8, ${0.3 + t * 0.35})`;
+      } else if (intensity < 0.75) {
+        const t = (intensity - 0.5) / 0.25;
+        return `rgba(249, 115, 22, ${0.4 + t * 0.35})`;
+      } else {
+        const t = (intensity - 0.75) / 0.25;
+        return `rgba(239, 68, 68, ${0.5 + t * 0.4})`;
+      }
+    }
+
+    function renderHeatmap(layer = 'stress') {
+      const data = patterns[layer] || patterns.stress;
+      heatmapLayer.innerHTML = '';
+      data.forEach((val, i) => {
+        const cell = document.createElement('div');
+        cell.className = 'heat-cell';
+        cell.style.background = getColor(val);
+        heatmapLayer.appendChild(cell);
+      });
+    }
+
+    // Initial render
+    renderHeatmap('stress');
+
+    // Layer switching
+    document.querySelectorAll('.viz-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.viz-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderHeatmap(btn.dataset.layer);
+      });
+    });
+
+    // Subtle animation: occasionally update a few cells to simulate live data
+    setInterval(() => {
+      const cells = heatmapLayer.querySelectorAll('.heat-cell');
+      if (!cells.length) return;
+      // Randomly tweak 3-5 cells slightly
+      for (let i = 0; i < 4; i++) {
+        const idx = Math.floor(Math.random() * cells.length);
+        const current = cells[idx];
+        // Slight opacity pulse
+        current.style.transition = 'opacity 0.8s';
+        current.style.opacity = 0.7 + Math.random() * 0.3;
+      }
+    }, 2200);
   </script>
 </body>
 </html>
