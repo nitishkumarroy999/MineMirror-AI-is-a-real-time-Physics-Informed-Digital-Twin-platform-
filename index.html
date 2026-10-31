@@ -5,30 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MineMirror AI | Physics-Informed Digital Twin for Mining</title>
   <meta name="description" content="MineMirror AI – Physics-informed Digital Twin platform for predictive safety, equipment reliability and operational excellence in mining." />
-  <meta name="author" content="Nitish Kumar Roy" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <style>
     :root {
       --primary: #0891b2;
       --primary-light: #22d3ee;
       --primary-dark: #0e7490;
-      --accent: #f97316;
       --bg: #ffffff;
       --bg-soft: #f8fafc;
-      --bg-card: #ffffff;
       --text: #0f172a;
       --text-muted: #64748b;
       --border: #e2e8f0;
       --radius: 16px;
       --radius-lg: 24px;
       --nav-height: 72px;
-      --success: #16a34a;
-      --warning: #ca8a04;
-      --danger: #dc2626;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -37,22 +31,21 @@
       color: var(--text);
       line-height: 1.65;
       overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
     }
 
-    /* ========== NAV ========== */
+    /* NAV */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
       height: var(--nav-height);
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 2.5rem;
-      background: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.9);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid transparent;
       transition: all 0.3s;
     }
     nav.scrolled {
-      background: rgba(255,255,255,0.95);
+      background: rgba(255,255,255,0.97);
       border-bottom-color: var(--border);
       box-shadow: 0 4px 24px rgba(0,0,0,0.06);
     }
@@ -114,7 +107,7 @@
     }
     .mobile-overlay.visible { opacity: 1; pointer-events: auto; }
 
-    /* ========== HERO WITH VIDEO ========== */
+    /* HERO with live 3D twin background */
     .hero {
       position: relative;
       min-height: 100vh;
@@ -122,22 +115,22 @@
       padding: 8rem 2.5rem 5rem;
       overflow: hidden;
     }
-    .hero-video {
+    #hero-twin {
       position: absolute; inset: 0;
       width: 100%; height: 100%;
-      object-fit: cover;
       z-index: 0;
     }
     .hero-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.88) 0%, rgba(248,250,252,0.82) 50%, rgba(255,255,255,0.9) 100%);
+      background: linear-gradient(115deg, rgba(255,255,255,0.92) 0%, rgba(248,250,252,0.78) 45%, rgba(255,255,255,0.55) 100%);
       z-index: 1;
+      pointer-events: none;
     }
     .hero-content {
       position: relative; z-index: 2;
       max-width: 1200px; margin: 0 auto;
-      display: grid; grid-template-columns: 1.2fr 0.8fr;
-      gap: 3.5rem; align-items: center;
+      display: grid; grid-template-columns: 1.15fr 0.85fr;
+      gap: 3rem; align-items: center;
     }
     .badge {
       display: inline-flex; align-items: center; gap: 0.55rem;
@@ -159,9 +152,8 @@
     }
     .hero h1 {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(2.5rem, 5vw, 3.7rem); font-weight: 700;
+      font-size: clamp(2.4rem, 5vw, 3.6rem); font-weight: 700;
       line-height: 1.12; margin-bottom: 1.3rem; letter-spacing: -1.2px;
-      color: var(--text);
     }
     .hero h1 span {
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
@@ -169,7 +161,7 @@
       background-clip: text;
     }
     .hero-lead {
-      font-size: 1.15rem; color: var(--text-muted);
+      font-size: 1.12rem; color: var(--text-muted);
       max-width: 520px; margin-bottom: 2.2rem;
     }
     .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; }
@@ -192,21 +184,21 @@
     .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
 
     .hero-card {
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.9);
       border-radius: var(--radius-lg);
       padding: 1.6rem;
       box-shadow: 0 20px 50px -12px rgba(0,0,0,0.12);
     }
     .hero-card-title {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.1rem; font-weight: 600; margin-bottom: 0.8rem;
+      font-size: 1.05rem; font-weight: 600; margin-bottom: 0.9rem;
       display: flex; align-items: center; gap: 0.5rem;
     }
     .live-dot {
       width: 9px; height: 9px; border-radius: 50%;
-      background: var(--success);
+      background: #16a34a;
       box-shadow: 0 0 0 0 rgba(22,163,74,0.5);
       animation: live-pulse 2s infinite;
     }
@@ -224,11 +216,11 @@
     }
     .metric-val {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.4rem; font-weight: 700; color: var(--primary);
+      font-size: 1.35rem; font-weight: 700; color: var(--primary);
     }
     .metric-label { font-size: 0.78rem; color: var(--text-muted); }
 
-    /* ========== SECTIONS ========== */
+    /* SECTIONS */
     section { padding: 5.5rem 2.5rem; max-width: 1200px; margin: 0 auto; }
     .section-header { text-align: center; margin-bottom: 3.2rem; }
     .section-label {
@@ -239,7 +231,7 @@
     .section-title {
       font-family: 'Space Grotesk', sans-serif;
       font-size: clamp(1.85rem, 3.5vw, 2.5rem); font-weight: 700;
-      letter-spacing: -0.6px; margin-bottom: 0.8rem; color: var(--text);
+      letter-spacing: -0.6px; margin-bottom: 0.8rem;
     }
     .section-desc { color: var(--text-muted); font-size: 1.08rem; max-width: 600px; margin: 0 auto; }
 
@@ -252,10 +244,9 @@
     .reveal-delay-2 { transition-delay: 0.2s; }
     .reveal-delay-3 { transition-delay: 0.3s; }
 
-    /* Cards */
     .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
     .card {
-      background: var(--bg-card); border: 1px solid var(--border);
+      background: #fff; border: 1px solid var(--border);
       border-radius: var(--radius); padding: 2rem;
       transition: all 0.35s; box-shadow: 0 4px 16px rgba(0,0,0,0.03);
     }
@@ -274,7 +265,6 @@
     .card h3 { font-size: 1.15rem; font-weight: 600; margin-bottom: 0.5rem; }
     .card p { color: var(--text-muted); font-size: 0.95rem; }
 
-    /* How it works */
     .how-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; }
     .how-step { display: flex; gap: 1.2rem; margin-bottom: 1.9rem; }
     .how-num {
@@ -287,22 +277,23 @@
     .how-step h4 { font-size: 1.12rem; margin-bottom: 0.3rem; }
     .how-step p { color: var(--text-muted); font-size: 0.96rem; }
 
-    /* Video showcase */
-    .video-showcase {
-      background: var(--bg-soft);
+    /* Live Twin section */
+    #demo-twin {
+      width: 100%; height: 480px;
       border-radius: var(--radius-lg);
-      overflow: hidden;
       border: 1px solid var(--border);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+      background: #0a0f1a;
+      overflow: hidden;
+      box-shadow: 0 20px 50px -15px rgba(0,0,0,0.15);
     }
-    .video-showcase video {
-      width: 100%; display: block; aspect-ratio: 16/9;
+    .twin-hint {
+      text-align: center; margin-top: 1rem;
+      font-size: 0.9rem; color: var(--text-muted);
     }
 
-    /* Stats */
     .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.4rem; }
     .stat-card {
-      background: var(--bg-card); border: 1px solid var(--border);
+      background: #fff; border: 1px solid var(--border);
       border-radius: 16px; padding: 2rem 1.4rem; text-align: center;
       transition: all 0.3s;
     }
@@ -314,10 +305,9 @@
     }
     .stat-label { color: var(--text-muted); font-size: 0.9rem; }
 
-    /* Collaborate */
     .collab-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem; }
     .collab-card {
-      background: var(--bg-card); border: 1px solid var(--border);
+      background: #fff; border: 1px solid var(--border);
       border-radius: var(--radius); padding: 2rem; transition: all 0.3s;
     }
     .collab-card:hover { border-color: #a5f3fc; transform: translateY(-4px); box-shadow: 0 16px 36px rgba(0,0,0,0.06); }
@@ -334,9 +324,8 @@
     }
     .collab-cta:hover { text-decoration: underline; }
 
-    /* Founder */
     .founder-card {
-      background: var(--bg-card); border: 1px solid var(--border);
+      background: #fff; border: 1px solid var(--border);
       border-radius: var(--radius-lg); padding: 2.8rem;
       display: flex; gap: 2.3rem; align-items: center;
       max-width: 820px; margin: 0 auto;
@@ -358,7 +347,6 @@
     .founder-role { color: var(--primary); font-weight: 600; margin-bottom: 0.9rem; }
     .founder-info p { color: var(--text-muted); font-size: 0.98rem; }
 
-    /* Contact */
     .contact-box {
       background: linear-gradient(145deg, #ecfeff, #f0f9ff);
       border: 1px solid #a5f3fc;
@@ -392,7 +380,6 @@
     footer .logo { display: inline-flex; margin-bottom: 0.8rem; }
     footer p { color: var(--text-muted); font-size: 0.9rem; }
 
-    /* Responsive */
     @media (max-width: 1024px) {
       .hero-content, .grid-3, .how-grid, .collab-grid, .stats {
         grid-template-columns: 1fr;
@@ -406,11 +393,11 @@
       section { padding: 4rem 1.3rem; }
       .hero { padding: 7rem 1.3rem 4rem; }
       .founder-card { flex-direction: column; text-align: center; }
+      #demo-twin { height: 360px; }
     }
   </style>
 </head>
 <body>
-  <!-- NAV -->
   <nav id="navbar">
     <a href="#" class="logo">Mine<span>Mirror</span> AI <span class="logo-dot"></span></a>
     <ul class="nav-links">
@@ -433,13 +420,9 @@
     <a href="#contact">Work With Me</a>
   </div>
 
-  <!-- HERO with running digital twin video -->
+  <!-- HERO – live moving digital twin background -->
   <header class="hero">
-    <!-- Place Digital twin.mp4 in the same folder as this HTML -->
-    <video class="hero-video" autoplay muted loop playsinline>
-      <source src="Digital twin.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
+    <div id="hero-twin"></div>
     <div class="hero-overlay"></div>
 
     <div class="hero-content">
@@ -486,7 +469,6 @@
     </div>
   </header>
 
-  <!-- OVERVIEW -->
   <section id="overview">
     <div class="section-header reveal">
       <div class="section-label">Platform Overview</div>
@@ -495,36 +477,29 @@
     </div>
     <div class="grid-3">
       <div class="card reveal reveal-delay-1">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <h3>Predictive Safety</h3>
         <p>Early detection of geotechnical instability and hazardous conditions with meaningful lead time for intervention.</p>
       </div>
       <div class="card reveal reveal-delay-2">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-        </div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></div>
         <h3>Asset Reliability</h3>
         <p>Continuous health monitoring of critical equipment to reduce unplanned downtime and optimise maintenance cycles.</p>
       </div>
       <div class="card reveal reveal-delay-3">
-        <div class="card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
         <h3>Workforce Protection</h3>
         <p>Real-time tracking of environmental exposure to support healthier working conditions and regulatory compliance.</p>
       </div>
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
   <section id="how" style="background: var(--bg-soft); max-width: none; padding-left: 0; padding-right: 0;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 2.5rem;">
       <div class="section-header reveal">
-        <div class="section-label">Education</div>
-        <h2 class="section-title">How a Digital Twin Works in Mining</h2>
-        <p class="section-desc">A physics-informed digital twin is not just a 3D model. It is a living system that mirrors the real mine in real time.</p>
+        <div class="section-label">How it Works</div>
+        <h2 class="section-title">How Mining Works Through a Digital Twin</h2>
+        <p class="section-desc">A physics-informed digital twin is a living system that mirrors the real mine in real time.</p>
       </div>
       <div class="how-grid reveal">
         <div>
@@ -553,34 +528,32 @@
             <div class="how-num">4</div>
             <div>
               <h4>Prediction & Action</h4>
-              <p>The twin runs forward simulations, detects anomalies, estimates remaining useful life and delivers clear alerts and recommended actions.</p>
+              <p>The twin runs forward simulations, detects anomalies, estimates remaining useful life and delivers clear alerts and recommended actions to operators.</p>
             </div>
           </div>
         </div>
-        <div class="video-showcase">
-          <video autoplay muted loop playsinline>
-            <source src="Digital twin.mp4" type="video/mp4" />
-          </video>
+        <div style="background:#0a0f1a;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border);height:380px;position:relative;">
+          <div id="how-twin" style="width:100%;height:100%;"></div>
+          <div style="position:absolute;bottom:12px;left:12px;background:rgba(15,23,42,0.85);color:#94a3b8;font-size:0.78rem;padding:6px 12px;border-radius:8px;">
+            Live sensor overlay · open-pit schematic
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- LIVE DEMO / TWIN -->
   <section id="demo">
     <div class="section-header reveal">
       <div class="section-label">Interactive</div>
-      <h2 class="section-title">See the Twin in Action</h2>
-      <p class="section-desc">A real-time 3D digital twin simulator demonstrating continuous synchronisation, detection and decision support.</p>
+      <h2 class="section-title">Live Mining Digital Twin</h2>
+      <p class="section-desc">Drag to orbit · scroll to zoom. Watch sensors pulse and the twin stay synchronised.</p>
     </div>
-    <div class="video-showcase reveal" style="max-width: 960px; margin: 0 auto;">
-      <video controls autoplay muted loop playsinline style="width:100%;">
-        <source src="Digital twin.mp4" type="video/mp4" />
-      </video>
+    <div class="reveal">
+      <div id="demo-twin"></div>
+      <p class="twin-hint">Interactive 3D digital twin of an open-pit mine — the same concept MineMirror applies at industrial scale.</p>
     </div>
   </section>
 
-  <!-- STATS -->
   <section>
     <div class="section-header reveal">
       <div class="section-label">Expected Outcomes</div>
@@ -594,7 +567,6 @@
     </div>
   </section>
 
-  <!-- COLLABORATE -->
   <section id="collaborate" style="background: var(--bg-soft); max-width: none; padding-left: 0; padding-right: 0;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 0 2.5rem;">
       <div class="section-header reveal">
@@ -651,7 +623,6 @@
     </div>
   </section>
 
-  <!-- FOUNDER -->
   <section id="founder">
     <div class="section-header reveal">
       <div class="section-label">Leadership</div>
@@ -671,7 +642,6 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
   <section id="contact">
     <div class="section-header reveal">
       <div class="section-label">Engage</div>
@@ -694,13 +664,10 @@
   </footer>
 
   <script>
-    // Navbar scroll
+    // ========== NAV ==========
     const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 40);
-    }, { passive: true });
+    window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 40), {passive:true});
 
-    // Mobile menu
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobileMenu');
     const mobileOverlay = document.getElementById('mobileOverlay');
@@ -712,41 +679,193 @@
     }
     hamburger.addEventListener('click', toggleMenu);
     mobileOverlay.addEventListener('click', toggleMenu);
-    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      if (mobileMenu.classList.contains('open')) toggleMenu();
-    }));
+    mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { if(mobileMenu.classList.contains('open')) toggleMenu(); }));
 
-    // Reveal on scroll
+    // ========== REVEAL ==========
     const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          revealObserver.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+      entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); revealObserver.unobserve(e.target); }});
+    }, {threshold:0.12, rootMargin:'0px 0px -30px 0px'});
     document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
-    // Counter animation
+    // ========== COUNTERS ==========
     const counterObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
+        if(!entry.isIntersecting) return;
         const el = entry.target;
         const target = +el.dataset.target;
         const suffix = el.dataset.suffix || '';
         const start = performance.now();
         function tick(now) {
-          const p = Math.min((now - start) / 1600, 1);
-          const eased = 1 - Math.pow(1 - p, 3);
-          el.textContent = Math.floor(eased * target) + suffix;
-          if (p < 1) requestAnimationFrame(tick);
-          else el.textContent = target + suffix;
+          const p = Math.min((now-start)/1600,1);
+          const eased = 1 - Math.pow(1-p,3);
+          el.textContent = Math.floor(eased*target) + suffix;
+          if(p<1) requestAnimationFrame(tick); else el.textContent = target + suffix;
         }
         requestAnimationFrame(tick);
         counterObserver.unobserve(el);
       });
-    }, { threshold: 0.5 });
+    }, {threshold:0.5});
     document.querySelectorAll('.stat-number[data-target]').forEach(c => counterObserver.observe(c));
+
+    // ========== THREE.JS MINING DIGITAL TWIN ==========
+    function createMiningTwin(containerId, options = {}) {
+      const container = document.getElementById(containerId);
+      if (!container || !window.THREE) return;
+
+      const isHero = options.isHero || false;
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(isHero ? 0xf1f5f9 : 0x0a0f1a);
+      if (!isHero) scene.fog = new THREE.Fog(0x0a0f1a, 40, 130);
+
+      const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 200);
+      camera.position.set(28, 22, 28);
+
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: isHero });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      // Lights
+      scene.add(new THREE.AmbientLight(isHero ? 0xffffff : 0x334455, isHero ? 0.7 : 0.55));
+      const dir = new THREE.DirectionalLight(isHero ? 0xffffff : 0x22d3ee, isHero ? 0.6 : 0.9);
+      dir.position.set(20, 30, 15);
+      scene.add(dir);
+      if (!isHero) {
+        const point = new THREE.PointLight(0xf97316, 0.45, 60);
+        point.position.set(-10, 15, -10);
+        scene.add(point);
+      }
+
+      // Ground
+      const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(70, 70, 24, 24),
+        new THREE.MeshStandardMaterial({
+          color: isHero ? 0xe2e8f0 : 0x1a2332,
+          roughness: 0.92,
+          metalness: 0.05
+        })
+      );
+      ground.rotation.x = -Math.PI / 2;
+      scene.add(ground);
+
+      // Open-pit benches
+      const pitGroup = new THREE.Group();
+      const benches = [
+        { size: 24, y: 0.5, color: isHero ? 0xcbd5e1 : 0x2a3548 },
+        { size: 19, y: 1.7, color: isHero ? 0x94a3b8 : 0x243040 },
+        { size: 14, y: 2.9, color: isHero ? 0x64748b : 0x1e2a38 },
+        { size: 9,  y: 4.1, color: isHero ? 0x475569 : 0x182230 },
+        { size: 5,  y: 5.2, color: isHero ? 0x334155 : 0x121a26 }
+      ];
+      benches.forEach(b => {
+        const mesh = new THREE.Mesh(
+          new THREE.BoxGeometry(b.size, 1.15, b.size),
+          new THREE.MeshStandardMaterial({ color: b.color, roughness: 0.85 })
+        );
+        mesh.position.y = b.y;
+        pitGroup.add(mesh);
+      });
+      scene.add(pitGroup);
+
+      // Live sensors
+      const sensors = [];
+      const sensorPositions = [
+        [9, 5.8, 7], [-8, 5.8, 6], [6, 4.5, -9],
+        [-7, 4.5, -8], [0, 6.5, 0], [11, 3.2, -5], [-10, 3.2, 4]
+      ];
+      sensorPositions.forEach(pos => {
+        const s = new THREE.Mesh(
+          new THREE.SphereGeometry(0.38, 16, 16),
+          new THREE.MeshStandardMaterial({
+            color: 0x22d3ee,
+            emissive: 0x22d3ee,
+            emissiveIntensity: 0.85
+          })
+        );
+        s.position.set(...pos);
+        scene.add(s);
+        sensors.push(s);
+      });
+
+      // Simple haul road / ramp
+      const ramp = new THREE.Mesh(
+        new THREE.BoxGeometry(3.5, 0.25, 18),
+        new THREE.MeshStandardMaterial({ color: isHero ? 0x94a3b8 : 0x334155, roughness: 0.7 })
+      );
+      ramp.position.set(14, 1.2, 0);
+      ramp.rotation.z = -0.18;
+      scene.add(ramp);
+
+      // Interaction
+      let isDragging = false, prevX = 0, prevY = 0;
+      let theta = 0.75, phi = 0.95, radius = isHero ? 48 : 42;
+
+      function updateCam() {
+        camera.position.x = radius * Math.sin(phi) * Math.cos(theta);
+        camera.position.y = radius * Math.cos(phi);
+        camera.position.z = radius * Math.sin(phi) * Math.sin(theta);
+        camera.lookAt(0, 3, 0);
+      }
+      updateCam();
+
+      renderer.domElement.addEventListener('mousedown', e => {
+        isDragging = true; prevX = e.clientX; prevY = e.clientY;
+      });
+      window.addEventListener('mouseup', () => isDragging = false);
+      window.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        theta -= (e.clientX - prevX) * 0.005;
+        phi = Math.max(0.25, Math.min(1.45, phi + (e.clientY - prevY) * 0.005));
+        prevX = e.clientX; prevY = e.clientY;
+        updateCam();
+      });
+      renderer.domElement.addEventListener('wheel', e => {
+        e.preventDefault();
+        radius = Math.max(20, Math.min(75, radius + e.deltaY * 0.04));
+        updateCam();
+      }, { passive: false });
+
+      // Touch support
+      renderer.domElement.addEventListener('touchstart', e => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          prevX = e.touches[0].clientX;
+          prevY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+      window.addEventListener('touchend', () => isDragging = false);
+      window.addEventListener('touchmove', e => {
+        if (!isDragging || e.touches.length !== 1) return;
+        theta -= (e.touches[0].clientX - prevX) * 0.006;
+        phi = Math.max(0.25, Math.min(1.45, phi + (e.touches[0].clientY - prevY) * 0.006));
+        prevX = e.touches[0].clientX;
+        prevY = e.touches[0].clientY;
+        updateCam();
+      }, { passive: true });
+
+      // Animation loop
+      function animate() {
+        requestAnimationFrame(animate);
+        sensors.forEach((s, i) => {
+          s.material.emissiveIntensity = 0.45 + 0.55 * Math.sin(Date.now() * 0.003 + i * 1.2);
+        });
+        pitGroup.rotation.y += 0.0009;
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        if (!container.clientWidth) return;
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+      });
+    }
+
+    // Create the three twins
+    createMiningTwin('hero-twin', { isHero: true });
+    createMiningTwin('how-twin');
+    createMiningTwin('demo-twin');
   </script>
 </body>
 </html>
